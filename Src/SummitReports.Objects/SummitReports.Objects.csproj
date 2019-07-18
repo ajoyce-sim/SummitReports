@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>SummitReports</PackageId>
+    <Authors>Noctusoft, Inc.</Authors>
+    <Description>A simple library that utilizes NPOI to calculate excel functions exactly as excel does.</Description>
+    <Copyright>2019 Summit Investments, Inc</Copyright>
+    <Product>SummitReports</Product>
+    <PackageProjectUrl>https://github.com/rvegajr/SummitReports</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rvegajr/SummitReports</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <PackageTags>Summit Reports</PackageTags>
+    <PackageReleaseNotes>We can now process NPV calculations exactly as Excel does.</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NPOI" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="UWRelationshipReport\UW-RCF-Reports.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
