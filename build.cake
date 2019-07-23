@@ -10,7 +10,7 @@ var target = Argument("target", "Default");
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
-var version = Argument("version", "1.0.6");
+var version = Argument("version", "1.0.7");
 var dirSep = System.IO.Path.DirectorySeparatorChar;
 
 var configuration = Argument("configuration", "Release");
