@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SummitReports.Objects", "SummitReports.Objects\SummitReports.Objects.csproj", "{44A199E4-E4F9-4760-AF47-98ACB06A7499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SummitReports.Tests", "SummitReports.Tests\SummitReports.Tests.csproj", "{3FF8F4BF-3A8B-4154-97BF-228E1765CCD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SummitReports.Tests", "SummitReports.Tests\SummitReports.Tests.csproj", "{3FF8F4BF-3A8B-4154-97BF-228E1765CCD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D58DDF8C-ED7A-4572-A24E-E6950A080CDB}"
+	ProjectSection(SolutionItems) = preProject
+		VersionInfo.cs = VersionInfo.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
