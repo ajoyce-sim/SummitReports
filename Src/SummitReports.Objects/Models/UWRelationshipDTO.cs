@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MARS.Entities.Models.Custom
+namespace SummitReports.Objects
 {
 
     public class UWRelationshipDTO

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MARS.Entities.Models.Custom
+namespace SummitReports.Objects
 {
     /// <summary></summary>
     public partial class UWRelationshipCashFlowDTO 
