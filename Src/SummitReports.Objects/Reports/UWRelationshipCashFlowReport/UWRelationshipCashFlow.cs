@@ -11,6 +11,7 @@ using System.Reflection;
 using SummitReports.Objects.Services;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
+using System.Text;
 
 namespace SummitReports.Objects
 {
@@ -19,7 +20,6 @@ namespace SummitReports.Objects
         public UWRelationshipCashFlow()
         {
             string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            this.TemplateFileName = assemblyPath + @"\Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx";
         }
         private XSSFWorkbook workbook = new XSSFWorkbook();
         private ISheet sheet;
@@ -27,10 +27,17 @@ namespace SummitReports.Objects
         private int rowIndex = 0;
         public string TemplateFileName = "";
         public string GeneratedFileName = ""; 
+
         private void SetupWorksheet()
         {
             this.GeneratedFileName = System.IO.Path.GetTempPath() + "UW-RCF-Reports-" + Guid.NewGuid().ToString() + ".xlsx";
-            File.Copy(this.TemplateFileName, this.GeneratedFileName);
+
+            var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
+            var stream = assembly.GetManifestResourceStream("SummitReports.Objects.Reports.UWRelationshipCashFlowReport.UW-RCF-Reports.xlsx");
+            FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
+            for (int i = 0; i < stream.Length; i++)
+                fileStream.WriteByte((byte)stream.ReadByte());
+            fileStream.Close();
             using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
             {
                 this.workbook = new XSSFWorkbook(file);

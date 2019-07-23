@@ -2,6 +2,9 @@
 #tool nuget:?package=vswhere
 #addin "Cake.WebDeploy"
 
+var IncrementMinorVersion = true;
+var NuGetReleaseNotes = new [] {".netcore2.2 target nuget deploy fix", "VS019", "Added Sentence Casing", "Updated by adding StringFormat helper that lets the template chain string functions such as 'lower,snake,title,trim', etc", "Upgraded all Nuget Packages"};
+
 DirectoryPath vsLatest  = VSWhereLatest();
 FilePath msBuildPathX64 = (vsLatest==null)
                             ? null
@@ -10,7 +13,6 @@ var target = Argument("target", "Default");
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
-var version = Argument("version", "1.0.8");
 var dirSep = System.IO.Path.DirectorySeparatorChar;
 
 var configuration = Argument("configuration", "Release");
@@ -27,6 +29,24 @@ var tempPath = System.IO.Path.GetTempPath();
 var deployPath = thisDir + "artifacts" + dirSep;
 var SummitNuGetPath = @"\\SIM-SVR03\Software\NuGet\";
 public int MAJOR = 0; public int MINOR = 1; public int REVISION = 2; public int BUILD = 3; //Version Segments
+
+var VersionInfoText = System.IO.File.ReadAllText(thisDir + "Src/VersionInfo.cs");
+var AssemblyFileVersionAttribute = Pluck(VersionInfoText, "AssemblyFileVersionAttribute(\"", "\")]");
+var CurrentAssemblyVersionAttribute = Pluck(VersionInfoText, "System.Reflection.AssemblyVersionAttribute(\"", "\")]");
+
+var AssemblyVersionAttribute = CurrentAssemblyVersionAttribute;
+var CurrentNugetVersion = VersionStringParts(AssemblyVersionAttribute, MAJOR, MINOR, REVISION);
+var NugetVersion = CurrentNugetVersion;
+if (IncrementMinorVersion) {	
+	AssemblyVersionAttribute = VersionStringIncrement(CurrentAssemblyVersionAttribute, REVISION);
+	NugetVersion = VersionStringParts(AssemblyVersionAttribute, MAJOR, MINOR, REVISION);
+	AssemblyFileVersionAttribute = NugetVersion + ".*";
+}
+
+Information("	  AssemblyVersionAttribute: {0}... Next: {1}", CurrentAssemblyVersionAttribute, AssemblyVersionAttribute);
+Information("	      CoreVersionAttribute: {0}... Next: {1}", GetVersionInProjectFile(projectFile), AssemblyVersionAttribute);
+Information("        		 Nuget version: {0}... Next: {1}", CurrentNugetVersion, NugetVersion);
+Information("AssemblyFileVersionAttribute : {0}", AssemblyFileVersionAttribute);
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -93,7 +113,7 @@ Task("NuGet-Pack")
     var nuGetPackSettings   = new NuGetPackSettings {
 		BasePath 				= thisDir,
         Id                      = @"SummitReports",
-        Version                 = version,
+        Version                 = NugetVersion,
         Title                   = @"SummitReports - Easy Summit Reports",
         Authors                 = new[] {"Ricardo Vega Jr."},
         Owners                  = new[] {"Ricardo Vega Jr."},
@@ -114,15 +134,12 @@ Task("NuGet-Pack")
 			{ @"Configuration", @"Release" }
 		},
 		Files = new[] {
-		
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.deps.json", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.dll", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.pdb", Target = "lib/netstandard2.0" },
-			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx", Target = "lib/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx" },
 
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.dll", Target = "lib/net461" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.pdb", Target = "lib/net461" },
-			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx", Target = "lib/net461/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx" },
 		},
 		ArgumentCustomization = args => args.Append("")		
     };
@@ -130,12 +147,19 @@ Task("NuGet-Pack")
     NuGetPack(thisDir + "NuGet/SummitReports.nuspec", nuGetPackSettings);
 });
 
-//////////////////////////////////////////////////////////////////////
-// TASK TARGETS
-//////////////////////////////////////////////////////////////////////
+Task("SetVersion")
+.IsDependentOn("NuGet-Pack")
+.Does(() => {
+	var VersionData = string.Format(@"using System.Reflection;
+[assembly: System.Reflection.AssemblyFileVersionAttribute(""{0}"")]
+[assembly: System.Reflection.AssemblyVersionAttribute(""{1}"")]
+", AssemblyFileVersionAttribute, AssemblyVersionAttribute);
+		System.IO.File.WriteAllText(thisDir + "Src/VersionInfo.cs", VersionData);
+		UpdateVersionInProjectFile(projectFile, AssemblyVersionAttribute);
+});
 
 Task("Finish")
-  .IsDependentOn("NuGet-Pack")
+  .IsDependentOn("SetVersion")
   .Does(() =>
 {
 	if (!DirectoryExists(SummitNuGetPath)) {
@@ -153,7 +177,6 @@ Task("Finish")
 	}
 	Information("Build Script has completed");
 });
-
 
 Task("Default")
     .IsDependentOn("Finish");
@@ -322,3 +345,23 @@ public IEnumerable<FileInfo> TraverseDirectory(string rootPath, Func<FileInfo, b
 			yield return f;
 	}
 }
+
+public string GetVersionInProjectFile(string projectFileName) {
+	var _VersionInfoText = System.IO.File.ReadAllText(projectFileName);
+	var _AssemblyFileVersionAttribute = Pluck(_VersionInfoText, "<Version>", "</Version>");
+	return _AssemblyFileVersionAttribute;
+}
+
+public bool UpdateVersionInProjectFile(string projectFileName, string NewVersion)
+{
+	var _VersionInfoText = System.IO.File.ReadAllText(projectFileName);
+	var _AssemblyFileVersionAttribute = Pluck(_VersionInfoText, "<Version>", "</Version>");
+	var VersionPattern = "<Version>{0}</Version>";
+	var _AssemblyFileVersionAttributeTextOld = string.Format(VersionPattern, _AssemblyFileVersionAttribute);
+	var _AssemblyFileVersionAttributeTextNew = string.Format(VersionPattern, NewVersion);
+	var newText = _VersionInfoText.Replace(_AssemblyFileVersionAttributeTextOld, _AssemblyFileVersionAttributeTextNew);
+
+	System.IO.File.WriteAllText(projectFileName, newText);	
+	return true;
+}
+  
