@@ -6,20 +6,23 @@
     <Description>A simple library that utilizes NPOI to calculate excel functions exactly as excel does.</Description>
     <Copyright>2019 Summit Investments, Inc</Copyright>
     <Product>SummitReports</Product>
-    <PackageProjectUrl>https://github.com/rvegajr/SummitReports</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/rvegajr/SummitReports</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ajoyce-sim/SummitReports</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ajoyce-sim/SummitReports</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <PackageTags>Summit Reports</PackageTags>
-    <PackageReleaseNotes>We can now process NPV calculations exactly as Excel does.</PackageReleaseNotes>
+    <PackageReleaseNotes>This report libary can generated UW Relationship Cash Flow</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastMember" Version="1.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NPOI" Version="2.4.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="UWRelationshipReport\UW-RCF-Reports.xlsx">
+    <None Update="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
