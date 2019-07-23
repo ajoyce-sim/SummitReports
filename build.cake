@@ -10,8 +10,7 @@ var target = Argument("target", "Default");
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
-//var version = Argument("version", "1.0.1.0003");
-var version = Argument("version", "1.0.4");
+var version = Argument("version", "1.0.8");
 var dirSep = System.IO.Path.DirectorySeparatorChar;
 
 var configuration = Argument("configuration", "Release");
@@ -90,7 +89,8 @@ Task("NuGet-Pack")
     .IsDependentOn("Build")
     .Does(() =>
 {
-   var nuGetPackSettings   = new NuGetPackSettings {
+    ClearDirectory(thisDir + "artifacts/");
+    var nuGetPackSettings   = new NuGetPackSettings {
 		BasePath 				= thisDir,
         Id                      = @"SummitReports",
         Version                 = version,
@@ -119,6 +119,10 @@ Task("NuGet-Pack")
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.dll", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.pdb", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx", Target = "lib/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx" },
+
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.dll", Target = "lib/net461" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.pdb", Target = "lib/net461" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx", Target = "lib/net461/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx" },
 		},
 		ArgumentCustomization = args => args.Append("")		
     };
@@ -134,16 +138,18 @@ Task("Finish")
   .IsDependentOn("NuGet-Pack")
   .Does(() =>
 {
-	if (!DirectoryExists(publishDir))
-		throw new Exception(String.Format("Publish Path {0} does not exist :(", publishDir));   
-	Information(string.Format("Copying {0} to {1}", publishDir, deployPath ));
-	CopyDirectory(publishDir, deployPath);
-	var sourceFolder = thisDir + @"artifacts/";
-	foreach (string sourceFile in System.IO.Directory.GetFiles(sourceFolder, @"*", SearchOption.AllDirectories))
-	{
-		string destinationFile = sourceFile.Replace(sourceFolder, SummitNuGetPath);
-		Information(string.Format("Copying {0} to {1}", sourceFile, destinationFile ));
-		System.IO.File.Copy(sourceFile, destinationFile, true);
+	if (!DirectoryExists(SummitNuGetPath)) {
+		Information(string.Format("Nuget Directory {0} does not exist, skipping nuget copy", SummitNuGetPath ));
+	} else {
+		Information(string.Format("Copying {0} to {1}", publishDir, deployPath ));
+		CopyDirectory(publishDir, deployPath);
+		var sourceFolder = thisDir + @"artifacts/";
+		foreach (string sourceFile in System.IO.Directory.GetFiles(sourceFolder, @"*", SearchOption.AllDirectories))
+		{
+			string destinationFile = sourceFile.Replace(sourceFolder, SummitNuGetPath);
+			Information(string.Format("Copying {0} to {1}", sourceFile, destinationFile ));
+			System.IO.File.Copy(sourceFile, destinationFile, true);
+		}
 	}
 	Information("Build Script has completed");
 });
@@ -158,7 +164,20 @@ Task("Default")
 
 RunTarget(target);
 
+public bool ClearDirectory(string PathToClear) {
+	System.IO.DirectoryInfo di = new DirectoryInfo(PathToClear);
 
+	foreach (FileInfo file in di.GetFiles())
+	{
+		file.Delete(); 
+	}
+	foreach (DirectoryInfo dir in di.GetDirectories())
+	{
+		dir.Delete(true); 
+	}
+	Information(string.Format("Directory {0} Cleared", PathToClear ));
+	return true;
+}
 public bool IsValidVersionString(string versionString) {
 	var v = versionString.Replace(".", "");
 	int test;
