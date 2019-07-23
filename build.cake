@@ -10,7 +10,7 @@ var target = Argument("target", "Default");
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
-var version = Argument("version", "1.0.7");
+var version = Argument("version", "1.0.8");
 var dirSep = System.IO.Path.DirectorySeparatorChar;
 
 var configuration = Argument("configuration", "Release");
@@ -120,8 +120,8 @@ Task("NuGet-Pack")
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.pdb", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx", Target = "lib/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx" },
 
-			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.dll", Target = "lib/netstandard2.0" },
-			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.pdb", Target = "lib/netstandard2.0" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.dll", Target = "lib/net461" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.pdb", Target = "lib/net461" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx", Target = "lib/net461/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx" },
 		},
 		ArgumentCustomization = args => args.Append("")		
