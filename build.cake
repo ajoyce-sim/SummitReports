@@ -118,7 +118,7 @@ Task("NuGet-Pack")
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.deps.json", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.dll", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.pdb", Target = "lib/netstandard2.0" },
-			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx", Target = "lib/netstandard2.0" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx", Target = "lib/netstandard2.0/Reports/UWRelationshipCashFlowReport/UW-RCF-Reports.xlsx" },
 		},
 		ArgumentCustomization = args => args.Append("")		
     };
@@ -134,16 +134,6 @@ Task("Finish")
   .IsDependentOn("NuGet-Pack")
   .Does(() =>
 {
-	EnsureDirectoryExists(deployPath);
-	if (!DirectoryExists(deployPath))
-		throw new Exception(String.Format("Deploy Path {0} does not exist :(", deployPath));   
-	Information(string.Format("Clearing {0}", deployPath));
-	//CleanDirectories(deployPath);
-	System.IO.DirectoryInfo di = new DirectoryInfo(deployPath);
-	foreach (System.IO.FileInfo file in di.GetFiles())
-		file.Delete(); 
-	foreach (System.IO.DirectoryInfo dir in di.GetDirectories())
-    dir.Delete(true); 
 	if (!DirectoryExists(publishDir))
 		throw new Exception(String.Format("Publish Path {0} does not exist :(", publishDir));   
 	Information(string.Format("Copying {0} to {1}", publishDir, deployPath ));
