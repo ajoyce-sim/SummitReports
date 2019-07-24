@@ -19,18 +19,33 @@ namespace SummitReports.Objects
     {
         public UWRelationshipCashFlow()
         {
-            string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            this.ReportWorkPath = System.IO.Path.GetTempPath();
         }
         private XSSFWorkbook workbook = new XSSFWorkbook();
         private ISheet sheet;
 
         private int rowIndex = 0;
         public string TemplateFileName = "";
-        public string GeneratedFileName = ""; 
+        public string GeneratedFileName = "";
+        private string reportWorkPath;
+        public string ReportWorkPath
+        {
+            get
+            {
+                return this.reportWorkPath;
+            }
+            set
+            {
+                this.reportWorkPath = value;
+                if (!this.reportWorkPath.EndsWith(Path.DirectorySeparatorChar.ToString())) {
+                    this.reportWorkPath += Path.DirectorySeparatorChar.ToString();
+                }
+            }
+        }
 
         private void SetupWorksheet()
         {
-            this.GeneratedFileName = System.IO.Path.GetTempPath() + "UW-RCF-Reports-" + Guid.NewGuid().ToString() + ".xlsx";
+            this.GeneratedFileName = this.reportWorkPath + "UW-RCF-Reports-" + Guid.NewGuid().ToString() + ".xlsx";
 
             var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
             var stream = assembly.GetManifestResourceStream("SummitReports.Objects.Reports.UWRelationshipCashFlowReport.UW-RCF-Reports.xlsx");
