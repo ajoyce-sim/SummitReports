@@ -83,8 +83,8 @@ namespace SummitReports.Objects
             {
                 SetupWorksheet();
                 var svc = new UWDataService();
-                var reldata = await svc.FetchUWRelationshipData(13);
-                var relCFdata = await svc.FetchUWRelationshipCashFlowsData(13);
+                var reldata = await svc.FetchUWRelationshipData(uwRelationshipId);
+                var relCFdata = await svc.FetchUWRelationshipCashFlowsData(uwRelationshipId);
                 foreach (var uwRelItem in reldata)
                 {
                     sheet.SetCellValue(2, "B", uwRelItem, "uwRelationshipId");
@@ -148,55 +148,74 @@ namespace SummitReports.Objects
                     sheet.SetCellValue(17, "G", uwRelItem, "MiscIncome5Label");
                     sheet.SetCellValue(17, "H", uwRelItem, "MiscIncome6Label");
 
+                    // create bordered cell style
+                    XSSFCellStyle cashFlowCellStyle = (XSSFCellStyle)workbook.CreateCellStyle();
+                    cashFlowCellStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+                    cashFlowCellStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+                    cashFlowCellStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+                    cashFlowCellStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+                    cashFlowCellStyle.BottomBorderColor = IndexedColors.Black.Index;
+                    cashFlowCellStyle.TopBorderColor = IndexedColors.Black.Index;
+                    cashFlowCellStyle.LeftBorderColor = IndexedColors.Black.Index;
+                    cashFlowCellStyle.RightBorderColor = IndexedColors.Black.Index;
+                    cashFlowCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.BOTTOM, new NPOI.XSSF.UserModel.XSSFColor(System.Drawing.Color.Black));
+                    cashFlowCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.LEFT, new NPOI.XSSF.UserModel.XSSFColor(System.Drawing.Color.Black));
+                    cashFlowCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.TOP, new NPOI.XSSF.UserModel.XSSFColor(System.Drawing.Color.Black));
+                    cashFlowCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.RIGHT, new NPOI.XSSF.UserModel.XSSFColor(System.Drawing.Color.Black));
+                    var formatStr = @"_(* #,##0_);_(* (#,##0);_(* "" - ""??_);_(@_)";
+                    cashFlowCellStyle.DataFormat = workbook.CreateDataFormat().GetFormat(formatStr);
 
-                    sheet.SetCellValue(71, "A", uwRelItem, "AssetNotes");
-                    sheet.SetCellValue(92, "A", uwRelItem, "CollateralValuationNotes");
-                    sheet.SetCellValue(114, "A", uwRelItem, "TitleUCCNotes");
-                    sheet.SetCellValue(126, "A", uwRelItem, "EnvironmentalNotes");
-
-                    for (int i = 0; i < 48; i++)
-                    {
-                        sheet.SetCellValue(18+i, "A", null);
-                        sheet.SetCellValue(18 + i, "C", 0.0);
-                        sheet.SetCellValue(18 + i, "D", 0.0);
-                        sheet.SetCellValue(18 + i, "E", 0.0);
-                        sheet.SetCellValue(18 + i, "F", 0.0);
-                        sheet.SetCellValue(18 + i, "G", 0.0);
-                        sheet.SetCellValue(18 + i, "H", 0.0);
-                        sheet.SetCellValue(18 + i, "I", 0.0);
-                        sheet.SetCellValue(18 + i, "J", 0.0);
-                        sheet.SetCellValue(18 + i, "K", 0.0);
-                        sheet.SetCellValue(18 + i, "L", 0.0);
-                        sheet.SetCellValue(18 + i, "M", 0.0);
-                        sheet.SetCellValue(18 + i, "N", 0.0);
-                        sheet.SetCellValue(18 + i, "O", 0.0);
-                        sheet.SetCellValue(18 + i, "P", 0.0);
-                        sheet.SetCellValue(18 + i, "Q", 0.0);
-                        sheet.SetCellValue(18 + i, "R", 0.0);
-                    }
                     var iRow = 0;
                     foreach (var cashFlowItem in relCFdata)
                     {
-                        sheet.SetCellValue(18 + iRow, "A", cashFlowItem, "CashFlowDate");
-                        sheet.SetCellValue(18 + iRow, "C", cashFlowItem, "Principal");
-                        sheet.SetCellValue(18 + iRow, "D", cashFlowItem, "Interest");
-                        sheet.SetCellValue(18 + iRow, "E", cashFlowItem, "MiscIncome3");
-                        sheet.SetCellValue(18 + iRow, "F", cashFlowItem, "MiscIncome4");
-                        sheet.SetCellValue(18 + iRow, "G", cashFlowItem, "MiscIncome5");
-                        sheet.SetCellValue(18 + iRow, "H", cashFlowItem, "MiscIncome6");
-                        sheet.SetCellValue(18 + iRow, "I", cashFlowItem, "BackTaxes");
-                        sheet.SetCellValue(18 + iRow, "J", cashFlowItem, "Legal");
-                        sheet.SetCellValue(18 + iRow, "K", cashFlowItem, "Travel");
-                        sheet.SetCellValue(18 + iRow, "L", cashFlowItem, "BrokerFee");
-                        sheet.SetCellValue(18 + iRow, "M", cashFlowItem, "REOTax");
-                        sheet.SetCellValue(18 + iRow, "N", cashFlowItem, "REOins");
-                        sheet.SetCellValue(18 + iRow, "O", cashFlowItem, "CapEx");
-                        sheet.SetCellValue(18 + iRow, "P", cashFlowItem, "TiLc");
-                        sheet.SetCellValue(18 + iRow, "Q", cashFlowItem, "Environ");
-                        sheet.SetCellValue(18 + iRow, "R", cashFlowItem, "Misc");
+                        sheet.CreateRow(18 + iRow);
+                        sheet.SetCellValue(18 + iRow, "A", cashFlowItem, "CashFlowDate").SetCellFormat("mmm-yy");
+                        sheet.SetCellValue(18 + iRow, "B", (double)(iRow + 1)).SetCellFormat("0"); ;
+                        sheet.SetCellValue(18 + iRow, "C", cashFlowItem, "Principal").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "D", cashFlowItem, "Interest").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "E", cashFlowItem, "MiscIncome3").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "F", cashFlowItem, "MiscIncome4").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "G", cashFlowItem, "MiscIncome5").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "H", cashFlowItem, "MiscIncome6").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "I", cashFlowItem, "BackTaxes").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "J", cashFlowItem, "Legal").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "K", cashFlowItem, "Travel").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "L", cashFlowItem, "BrokerFee").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "M", cashFlowItem, "REOTax").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "N", cashFlowItem, "REOins").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "O", cashFlowItem, "CapEx").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "P", cashFlowItem, "TiLc").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "Q", cashFlowItem, "Environ").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "R", cashFlowItem, "Misc").SetCellStyle(cashFlowCellStyle);
                         iRow++;
                     }
+                    iRow++; sheet.CreateRow(18 + iRow);
+                    sheet.SetCellValue(18 + iRow, "C", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(C18:C{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "D", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(D18:D{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "E", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(E18:E{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "F", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(F18:F{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "G", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(G18:G{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "H", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(H18:H{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "I", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(I18:I{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "J", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(J18:J{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "K", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(K18:K{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "L", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(L18:L{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "M", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(M18:M{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "N", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(N18:N{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "O", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(O18:O{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "P", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(P18:P{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "Q", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(Q18:Q{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "R", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(R18:R{0})", (18 + iRow - 2)));
+
+                    this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex("Notes"));
+
+                    sheet.SetCellValue(2, "A", uwRelItem, "AssetNotes");
+                    sheet.SetCellValue(23, "A", uwRelItem, "CollateralValuationNotes");
+                    sheet.SetCellValue(45, "A", uwRelItem, "TitleUCCNotes");
+                    sheet.SetCellValue(57, "A", uwRelItem, "EnvironmentalNotes");
+
                 }
+
                 SaveToFile(this.GeneratedFileName);
                 return this.GeneratedFileName;
             }

@@ -1,5 +1,7 @@
 ﻿using FastMember;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,11 +16,16 @@ namespace SummitReports.Objects
         {
             cell.SetCellValue((decimal)value);
         }
-        public static bool isDateTime(this Object obj)
+        public static ICell SetCellStyle(this ICell cell, ICellStyle style)
+        {
+            cell.CellStyle = style;
+            return cell;
+        }
+        private static bool isDateTime(this Object obj)
         {
             return (obj.GetType().Name.Contains("DateTime")) || (obj.GetType().UnderlyingSystemType.Name.Contains("DateTime"));
         }
-        public static bool isDouble(this Object obj)
+        private static bool isDouble(this Object obj)
         {
             return (obj.GetType().Name.Contains("Int")) || (obj.GetType().UnderlyingSystemType.Name.Contains("Int"))
                     || (obj.GetType().UnderlyingSystemType.Name.Contains("Decimal")) || (obj.GetType().UnderlyingSystemType.Name.Contains("double"))
@@ -27,17 +34,56 @@ namespace SummitReports.Objects
                     || (obj.GetType().Name.Contains("Float")) || (obj.GetType().UnderlyingSystemType.Name.Contains("Float"))
                     ;
         }
-        public static bool isBool(this Object obj)
+        private static bool isBool(this Object obj)
         {
             return ((obj.GetType().Name.Contains("Bool")) || (obj.GetType().UnderlyingSystemType.Name.Contains("bool")));
         }
-        public static bool isString(this Object obj)
+        private static bool isString(this Object obj)
         {
             return ((obj.GetType().Name.Contains("String")) || (obj.GetType().UnderlyingSystemType.Name.Contains("string")));
         }
 
+        private static ICell GetCell(this ISheet worksheet, int rowPosition, int columnPosition)
+        {
+            var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+            return row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
+        }
+        private static ICell GetCell(this ISheet worksheet, int rowPosition, string columnLetter)
+        {
+            int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
+            return worksheet.GetCell(rowPosition, columnPosition);
+        }
 
-        public static void SetCellValue<T>(this ISheet worksheet, int rowPosition, string columnLetter, T sourceObject, string FieldName)
+        public static ICell SetCellValue<T>(this ISheet worksheet, int rowPosition, string columnLetter, T sourceObject, string FieldName, ICellStyle style)
+        {
+            return worksheet.SetCellValue(rowPosition, columnLetter, sourceObject, FieldName).SetCellStyle(style);
+        }
+
+        private static Dictionary<string, ICellStyle> styleList = new Dictionary<string, ICellStyle>();
+        /// <summary>
+        /// This will create and cache a formula with scope of the worksheet.  but not that if you set use SetCellStyle,  that whatever is defined in SetCellStyle will be overridden by anything here
+        /// </summary>
+        /// <param name="cell">Exention this</param>
+        /// <param name="formatString"></param>
+        /// <returns>ICell - The Cell it is changing</returns>
+        public static ICell SetCellFormat(this ICell cell, string formatString)
+        {
+            if (!styleList.ContainsKey(formatString)) { 
+                var sheet = cell.Sheet.Workbook;
+                ICellStyle cs = sheet.CreateCellStyle();
+                cs.DataFormat = sheet.CreateDataFormat().GetFormat(formatString);
+                styleList.Add(formatString, cs);
+            }
+            cell.CellStyle = styleList[formatString];
+            return cell;
+        }
+        public static ICell SetCellFormula(this ICell cell, string formulaString)
+        {
+            cell.SetCellFormula(formulaString);
+            return cell;
+        }
+
+        public static ICell SetCellValue<T>(this ISheet worksheet, int rowPosition, string columnLetter, T sourceObject, string FieldName)
         {
             try
             {
@@ -47,30 +93,29 @@ namespace SummitReports.Objects
                 var obj = accessor[sourceObject, FieldName];
                 if (obj == null)
                 {
-                    worksheet.SetCellType(rowPosition, columnPosition, CellType.Blank);
-                    return;
+                    return worksheet.SetCellType(rowPosition, columnPosition, CellType.Blank);
                 }
                 if (obj.isDateTime())
                 {
                     var c = TypeDescriptor.GetConverter(obj.GetType());
                     if (c.CanConvertTo(obj.GetType()))
-                        worksheet.SetCellValue(rowPosition, columnPosition, (DateTime)c.ConvertTo(obj, DateTime.Now.GetType()));
+                        return worksheet.SetCellValue(rowPosition, columnPosition, (DateTime)c.ConvertTo(obj, DateTime.Now.GetType()));
                     else
-                        worksheet.SetCellValue(rowPosition, columnPosition, (DateTime)obj);
+                        return worksheet.SetCellValue(rowPosition, columnPosition, (DateTime)obj);
                 }
                 else if (obj.isDouble())
                 {
                     worksheet.SetCellType(rowPosition, columnPosition, CellType.Numeric);
                     var c = TypeDescriptor.GetConverter(obj.GetType());
                     if (c.CanConvertTo(obj.GetType()))
-                        worksheet.SetCellValue(rowPosition, columnPosition, (double)c.ConvertTo(obj, 0.0.GetType()));
+                        return worksheet.SetCellValue(rowPosition, columnPosition, (double)c.ConvertTo(obj, 0.0.GetType()));
                     else 
-                        worksheet.SetCellValue(rowPosition, columnPosition, Convert.ToDouble(obj));
+                        return worksheet.SetCellValue(rowPosition, columnPosition, Convert.ToDouble(obj));
                 }
                 else if (obj.isBool())
                 {
                     worksheet.SetCellType(rowPosition, columnPosition, CellType.Boolean);
-                    worksheet.SetCellValue(rowPosition, columnPosition, (bool)obj);
+                    return worksheet.SetCellValue(rowPosition, columnPosition, (bool)obj);
                     //var c = TypeDescriptor.GetConverter(obj.GetType());
                     //if (c.CanConvertTo(obj.GetType()))
                     //    worksheet.SetCellValue(rowPosition, columnPosition, (bool)c.ConvertTo(obj, true.GetType()));
@@ -78,7 +123,7 @@ namespace SummitReports.Objects
                 else
                 {
                     worksheet.SetCellType(rowPosition, columnPosition, CellType.String);
-                    worksheet.SetCellValue(rowPosition, columnPosition, (string)obj);
+                    return worksheet.SetCellValue(rowPosition, columnPosition, (string)obj);
                 }
             }
             catch (Exception ex)
@@ -89,14 +134,15 @@ namespace SummitReports.Objects
         }
 
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, DateTime value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, DateTime value)
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 cell.CellStyle.DataFormat = 14;
+                return cell;
             }
             catch (Exception ex)
             {
@@ -105,15 +151,17 @@ namespace SummitReports.Objects
 
         }
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, DateTime value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, DateTime value)
         {
             try
             {
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 cell.CellStyle.DataFormat = 14;
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -122,13 +170,14 @@ namespace SummitReports.Objects
 
         }
 
-        public static void SetCellType(this ISheet worksheet, int rowPosition, int columnPosition, CellType type)
+        public static ICell SetCellType(this ISheet worksheet, int rowPosition, int columnPosition, CellType type)
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellType(type);
+                return cell;
             }
             catch (Exception ex)
             {
@@ -137,14 +186,16 @@ namespace SummitReports.Objects
 
         }
 
-        public static void SetCellType(this ISheet worksheet, int rowPosition, string columnLetter, CellType type)
+        public static ICell SetCellType(this ISheet worksheet, int rowPosition, string columnLetter, CellType type)
         {
             try
             {
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellType(type);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -154,14 +205,16 @@ namespace SummitReports.Objects
         }
 
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, double value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, double value)
         {
             try
             {
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -170,13 +223,15 @@ namespace SummitReports.Objects
 
         }
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, double value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, double value)
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -185,14 +240,16 @@ namespace SummitReports.Objects
 
         }
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, bool value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, bool value)
         {
             try
             {
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -201,13 +258,15 @@ namespace SummitReports.Objects
 
         }
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, bool value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, bool value)
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -215,13 +274,15 @@ namespace SummitReports.Objects
             }
 
         }
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, decimal value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, decimal value)
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -230,14 +291,16 @@ namespace SummitReports.Objects
 
         }
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, decimal value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, decimal value)
         {
             int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -245,13 +308,15 @@ namespace SummitReports.Objects
             }
         }
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, string value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, string value)
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -259,14 +324,16 @@ namespace SummitReports.Objects
             }
         }
 
-        public static void SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, string value)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, string value)
         {
             try
             {
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -275,14 +342,16 @@ namespace SummitReports.Objects
         }
 
 
-        public static void SetCellFormula(this ISheet worksheet, int rowPosition, int columnPosition, string value)
+        public static ICell SetCellFormula(this ISheet worksheet, int rowPosition, int columnPosition, string value)
         {
             try
             {
 
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellFormula(value);
+                return cell;
+
             }
             catch (Exception ex)
             {
@@ -294,7 +363,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
                 if (cell == null) return defaultValue;
                 return cell.NumericCellValue;
@@ -309,7 +378,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
                 if (cell == null) return defaultValue;
                 return (decimal)cell.NumericCellValue;
@@ -324,7 +393,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
                 if (cell == null) return defaultValue;
@@ -340,7 +409,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
                 if (cell == null) return defaultValue;
