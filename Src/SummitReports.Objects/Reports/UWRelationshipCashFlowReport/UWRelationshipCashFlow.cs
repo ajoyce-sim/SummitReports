@@ -58,6 +58,7 @@ namespace SummitReports.Objects
                 this.workbook = new XSSFWorkbook(file);
                 this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex("Relationship Cash Flow"));
             }
+            this.workbook.ClearStyleCache();
 
         }
         public bool SaveToFile(string FileName)

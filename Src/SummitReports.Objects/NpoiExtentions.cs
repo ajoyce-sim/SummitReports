@@ -58,7 +58,10 @@ namespace SummitReports.Objects
         {
             return worksheet.SetCellValue(rowPosition, columnLetter, sourceObject, FieldName).SetCellStyle(style);
         }
-
+        public static void ClearStyleCache(this IWorkbook workbook)
+        {
+            styleList.Clear();
+        }
         private static Dictionary<string, ICellStyle> styleList = new Dictionary<string, ICellStyle>();
         /// <summary>
         /// This will create and cache a formula with scope of the worksheet.  but not that if you set use SetCellStyle,  that whatever is defined in SetCellStyle will be overridden by anything here
