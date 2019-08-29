@@ -178,16 +178,17 @@ namespace SummitReports.Objects
                         sheet.SetCellValue(18 + iRow, "F", cashFlowItem, "MiscIncome4").SetCellStyle(cashFlowCellStyle);
                         sheet.SetCellValue(18 + iRow, "G", cashFlowItem, "MiscIncome5").SetCellStyle(cashFlowCellStyle);
                         sheet.SetCellValue(18 + iRow, "H", cashFlowItem, "MiscIncome6").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "I", cashFlowItem, "BackTaxes").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "J", cashFlowItem, "Legal").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "K", cashFlowItem, "Travel").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "L", cashFlowItem, "BrokerFee").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "M", cashFlowItem, "REOTax").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "N", cashFlowItem, "REOins").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "O", cashFlowItem, "CapEx").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "P", cashFlowItem, "TiLc").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "Q", cashFlowItem, "Environ").SetCellStyle(cashFlowCellStyle);
-                        sheet.SetCellValue(18 + iRow, "R", cashFlowItem, "Misc").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "I", (double)(iRow + 1)).SetCellFormat("0"); ;
+                        sheet.SetCellValue(18 + iRow, "J", cashFlowItem, "BackTaxes").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "K", cashFlowItem, "Legal").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "L", cashFlowItem, "Travel").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "M", cashFlowItem, "BrokerFee").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "N", cashFlowItem, "REOTax").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "O", cashFlowItem, "REOins").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "P", cashFlowItem, "CapEx").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "Q", cashFlowItem, "TiLc").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "R", cashFlowItem, "Environ").SetCellStyle(cashFlowCellStyle);
+                        sheet.SetCellValue(18 + iRow, "S", cashFlowItem, "Misc").SetCellStyle(cashFlowCellStyle);
                         iRow++;
                     }
                     iRow++; sheet.CreateRow(18 + iRow);
@@ -197,16 +198,16 @@ namespace SummitReports.Objects
                     sheet.SetCellValue(18 + iRow, "F", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(F18:F{0})", (18 + iRow - 2)));
                     sheet.SetCellValue(18 + iRow, "G", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(G18:G{0})", (18 + iRow - 2)));
                     sheet.SetCellValue(18 + iRow, "H", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(H18:H{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "I", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(I18:I{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "J", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(J18:J{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "K", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(K18:K{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "L", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(L18:L{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "M", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(M18:M{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "N", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(N18:N{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "O", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(O18:O{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "P", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(P18:P{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "Q", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(Q18:Q{0})", (18 + iRow - 2)));
-                    sheet.SetCellValue(18 + iRow, "R", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(R18:R{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "J", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(I18:I{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "K", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(J18:J{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "L", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(K18:K{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "M", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(L18:L{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "N", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(M18:M{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "O", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(N18:N{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "P", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(O18:O{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "Q", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(P18:P{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "R", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(Q18:Q{0})", (18 + iRow - 2)));
+                    sheet.SetCellValue(18 + iRow, "S", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(R18:R{0})", (18 + iRow - 2)));
 
                     this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex("Notes"));
 
