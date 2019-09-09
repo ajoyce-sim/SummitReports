@@ -119,9 +119,6 @@ namespace SummitReports.Objects
                 {
                     worksheet.SetCellType(rowPosition, columnPosition, CellType.Boolean);
                     return worksheet.SetCellValue(rowPosition, columnPosition, (bool)obj);
-                    //var c = TypeDescriptor.GetConverter(obj.GetType());
-                    //if (c.CanConvertTo(obj.GetType()))
-                    //    worksheet.SetCellValue(rowPosition, columnPosition, (bool)c.ConvertTo(obj, true.GetType()));
                 }
                 else
                 {
@@ -250,7 +247,7 @@ namespace SummitReports.Objects
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
                 var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
-                cell.SetCellValue(value);
+                cell.SetCellValue(((value) ? "Yes" : "No"));
                 return cell;
 
             }
@@ -267,7 +264,7 @@ namespace SummitReports.Objects
             {
                 var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
-                cell.SetCellValue(value);
+                cell.SetCellValue(((value) ? "Yes" : "No"));
                 return cell;
 
             }

@@ -16,6 +16,9 @@
     <FileVersion>1.0.3.0</FileVersion>
     <Version>1.0.18.0</Version>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Reports\ModelReport\ModelReportTemplate.xlsx" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FastMember" Version="1.5.0" />
@@ -24,6 +27,7 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="Reports\ModelReport\ModelReportTemplate.xlsx" />
 	<EmbeddedResource Include="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx"></EmbeddedResource>
   </ItemGroup>
 </Project>

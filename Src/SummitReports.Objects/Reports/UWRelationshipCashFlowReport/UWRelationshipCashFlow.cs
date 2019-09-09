@@ -15,64 +15,13 @@ using System.Text;
 
 namespace SummitReports.Objects
 {
-    public class UWRelationshipCashFlow
+    public class UWRelationshipCashFlow : SummitReportBaseObject
     {
-        public UWRelationshipCashFlow()
+        public UWRelationshipCashFlow() : base(@"UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx")
         {
-            this.ReportWorkPath = System.IO.Path.GetTempPath();
-        }
-        private XSSFWorkbook workbook = new XSSFWorkbook();
-        private ISheet sheet;
-
-        private int rowIndex = 0;
-        public string TemplateFileName = "";
-        public string GeneratedFileName = "";
-        private string reportWorkPath;
-        public string ReportWorkPath
-        {
-            get
-            {
-                return this.reportWorkPath;
-            }
-            set
-            {
-                this.reportWorkPath = value;
-                if (!this.reportWorkPath.EndsWith(Path.DirectorySeparatorChar.ToString())) {
-                    this.reportWorkPath += Path.DirectorySeparatorChar.ToString();
-                }
-            }
-        }
-
-        private void SetupWorksheet()
-        {
-            this.GeneratedFileName = this.reportWorkPath + "UW-RCF-Reports-" + Guid.NewGuid().ToString() + ".xlsx";
-
-            var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
-            var stream = assembly.GetManifestResourceStream("SummitReports.Objects.Reports.UWRelationshipCashFlowReport.UW-RCF-Reports.xlsx");
-            FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
-            for (int i = 0; i < stream.Length; i++)
-                fileStream.WriteByte((byte)stream.ReadByte());
-            fileStream.Close();
-            using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
-            {
-                this.workbook = new XSSFWorkbook(file);
-                this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex("Relationship Cash Flow"));
-            }
-            this.workbook.ClearStyleCache();
 
         }
-        public bool SaveToFile(string FileName)
-        {
-            using (var file2 = new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite))
-            {
-                workbook.Write(file2);
-                file2.Close();
-            }
-            return true;
-        }
-        public void Clear()
-        {
-        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -82,7 +31,22 @@ namespace SummitReports.Objects
         {
             try
             {
-                SetupWorksheet();
+                this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
+
+                var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
+                var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
+                FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
+                for (int i = 0; i < stream.Length; i++)
+                    fileStream.WriteByte((byte)stream.ReadByte());
+                fileStream.Close();
+                using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
+                {
+                    this.workbook = new XSSFWorkbook(file);
+                    this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex("Relationship Cash Flow"));
+                }
+                this.workbook.ClearStyleCache();
+
+
                 var svc = new UWDataService();
                 var reldata = await svc.FetchUWRelationshipData(uwRelationshipId);
                 var relCFdata = await svc.FetchUWRelationshipCashFlowsData(uwRelationshipId);
@@ -119,7 +83,7 @@ namespace SummitReports.Objects
                     sheet.SetCellValue(7, "D", uwRelItem, "PrimaryCounty");
                     sheet.SetCellValue(7, "F", uwRelItem, "PrimaryState");
 
-                    sheet.SetCellValue(9, "B", uwRelItem, "CollateralDescText");
+                    sheet.SetCellValue(8, "B", uwRelItem, "CollateralDescText");
                     sheet.SetCellValue(9, "I", 0.0);
                     sheet.SetCellValue(9, "M", uwRelItem, "CashOnCash");
                     sheet.SetCellValue(9, "N", uwRelItem, "GrossCashFlow");
