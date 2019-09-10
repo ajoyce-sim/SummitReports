@@ -51,7 +51,7 @@ namespace SummitReports.Objects
                 var dataArr = await MarsDb.Query<UWDeanSheetDTO>(sSQL, BidPoolId);
                 foreach (var data in dataArr)
                 {
-                    sheet.SetCellValue(1, "A", "Portfolio Bid Worksheet);
+                    sheet.SetCellValue(1, "A", "Portfolio Bid Worksheet");
                     sheet.SetCellValue(2, "B", 777d);
                     sheet.SetCellValue(3, "B", "LITERAL DATA Z");
                 }

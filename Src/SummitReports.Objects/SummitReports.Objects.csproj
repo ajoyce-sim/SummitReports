@@ -17,8 +17,8 @@
     <Version>1.0.21.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Reports\DeanSheet-Presentation\DeanSheet-Presentation.xlsx" />
-    <None Remove="Reports\DeanSheet-Presentation\DeanSheetPresentationTemplate.xlsx" />
+    <None Remove="Reports\DeanSheetPresentation\DeanSheet-Presentation.xlsx" />
+    <None Remove="Reports\DeanSheetPresentation\DeanSheetPresentationTemplate.xlsx" />
     <None Remove="Reports\ModelReport\ModelReportTemplate.xlsx" />
     <None Remove="Reports\SampleReport\SampleReportTemplate.xlsx" />
   </ItemGroup>
@@ -30,7 +30,7 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="Reports\DeanSheet-Presentation\DeanSheet-Presentation.xlsx" />
+	<EmbeddedResource Include="Reports\DeanSheetPresentation\DeanSheet-Presentation.xlsx" />
 	<EmbeddedResource Include="Reports\SampleReport\SampleReportTemplate.xlsx" />
 	<EmbeddedResource Include="Reports\ModelReport\ModelReportTemplate.xlsx" />
 	<EmbeddedResource Include="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx"></EmbeddedResource>

@@ -44,5 +44,13 @@ namespace SummitReports.Tests
             var generatedFIleName = await rpt.GenerateAsync(2);
         }
 
+        [Fact]
+
+        public async void DeanSheetPresentationtGenTestOk()
+        {
+            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var rpt = new DeanSheetPresentation();
+            var generatedFIleName = await rpt.GenerateAsync(2);
+        }
     }
 }
