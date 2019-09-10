@@ -36,6 +36,13 @@ namespace SummitReports.Tests
             var generatedFIleName = await rpt.GenerateAsync(13);
         }
 
+        [Fact]
+        public async void SampleReportGenTestOk()
+        {
+            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var rpt = new SampleReport();
+            var generatedFIleName = await rpt.GenerateAsync(2);
+        }
 
     }
 }
