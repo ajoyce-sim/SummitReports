@@ -298,6 +298,51 @@ namespace SummitReports.Objects
         }
 
         /// <summary>
+        /// Execute a Query and return a Data Reader,  make sure you close it
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public static async Task<DataSet> QueryAsDataSetAsync(string sql, List<SqlParameter> parmList) 
+        {
+            DataSet dataset = new DataSet();
+            using (var conn = await MarsDb.ConnectionAsync())
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = sql;
+                    cmd.CommandType = CommandType.Text;
+                    foreach (var parm in parmList)
+                    {
+                        cmd.Parameters.Add(parm);
+                    }
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    adapter.Fill(dataset);
+                }
+            }
+            return dataset;
+        }
+
+        /// <summary>
+        /// Execute a Query and return a Data Reader,  make sure you close it
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="parmList">Will assume the parameter names is </param>
+        /// <returns></returns>
+        public static async Task<DataSet> QueryAsDataSetAsync(string sql, params object[] parmList) 
+        {
+            var sqlParmList = new List<SqlParameter>();
+            var i = 0;
+            foreach (var val in parmList)
+            {
+                sqlParmList.Add(new SqlParameter(string.Format("p{0}", i), val));
+                i++;
+            }
+            return await QueryAsDataSetAsync(sql, sqlParmList);
+        }
+
+        /// <summary>
         /// Execute a qeury and have it return the result set as an objects
         /// </summary>
         /// <typeparam name="T"></typeparam>
