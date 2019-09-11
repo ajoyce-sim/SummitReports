@@ -60,26 +60,20 @@ namespace SummitReports.Objects
                 /* Using ADO.NET Specified */
                 string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_RelationshipCashFlow] WHERE [uwRelationshipId]=@p0 ORDER BY CashFlowDate ASC;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
                 var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, uwRelationshipId);
-                var resultSetIndex = 1;
-                foreach (System.Data.DataTable table in retDataSet.Tables)
+                System.Data.DataTable firstResultSet = retDataSet.Tables[0];
+                System.Data.DataRow firstrow = firstResultSet.Rows[0];
+                foreach (System.Data.DataRow row in firstResultSet.Rows)
                 {
-                    foreach (System.Data.DataRow row in table.Rows)
-                    {
-                        if (resultSetIndex == 1) //first result set
-                        {
-                            sheet.SetCellValue(1, "D", "@DR1->");
-                            sheet.SetCellValue(1, "E", row, "uwRelationshipId");
-                            sheet.SetCellValue(2, "D", "@DR1->");
-                            sheet.SetCellValue(2, "E", row, "RelationshipName");
-                        }
-                        else if (resultSetIndex == 2)
-                        { //first result set 
-                            sheet.SetCellValue(3, "D", "@DR2->");
-                            sheet.SetCellValue(3, "E", row, "ThisDate");
-                        }
-
-                    }
-                    resultSetIndex++;
+                    sheet.SetCellValue(1, "D", "@DR1->");
+                    sheet.SetCellValue(1, "E", row, "uwRelationshipId");
+                    sheet.SetCellValue(2, "D", "@DR1->");
+                    sheet.SetCellValue(2, "E", row, "RelationshipName");
+                }
+                System.Data.DataTable secondResultSet = retDataSet.Tables[1];
+                foreach (System.Data.DataRow row in secondResultSet.Rows)
+                {
+                    sheet.SetCellValue(3, "D", "@DR2->");
+                    sheet.SetCellValue(3, "E", row, "ThisDate");
                 }
 
                 SaveToFile(this.GeneratedFileName);
