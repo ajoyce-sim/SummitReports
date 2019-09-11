@@ -12,6 +12,7 @@ using SummitReports.Objects.Services;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using System.Text;
+using System.Data.SqlClient;
 
 namespace SummitReports.Objects
 {
@@ -46,6 +47,7 @@ namespace SummitReports.Objects
                 }
                 this.workbook.ClearStyleCache();
 
+                /* Using Model Specified */ 
                 string sSQL = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_RelationshipCashFlow] WHERE [uwRelationshipId]=@p0 ORDER BY CashFlowDate ASC;";
                 var dataArr = await MarsDb.Query<UWRelationshipDTO>(sSQL, uwRelationshipId);
                 foreach (var data in dataArr)
@@ -55,6 +57,30 @@ namespace SummitReports.Objects
                     sheet.SetCellValue(3, "B", "LITERAL DATA");
                 }
 
+                /* Using ADO.NET Specified */
+                string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_RelationshipCashFlow] WHERE [uwRelationshipId]=@p0 ORDER BY CashFlowDate ASC;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
+                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, uwRelationshipId);
+                var resultSetIndex = 1;
+                foreach (System.Data.DataTable table in retDataSet.Tables)
+                {
+                    foreach (System.Data.DataRow row in table.Rows)
+                    {
+                        if (resultSetIndex == 1) //first result set
+                        {
+                            sheet.SetCellValue(1, "D", "@DR1->");
+                            sheet.SetCellValue(1, "E", row, "uwRelationshipId");
+                            sheet.SetCellValue(2, "D", "@DR1->");
+                            sheet.SetCellValue(2, "E", row, "RelationshipName");
+                        }
+                        else if (resultSetIndex == 2)
+                        { //first result set 
+                            sheet.SetCellValue(3, "D", "@DR2->");
+                            sheet.SetCellValue(3, "E", row, "ThisDate");
+                        }
+
+                    }
+                    resultSetIndex++;
+                }
 
                 SaveToFile(this.GeneratedFileName);
                 return this.GeneratedFileName;

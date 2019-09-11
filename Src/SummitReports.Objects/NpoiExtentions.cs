@@ -86,12 +86,56 @@ namespace SummitReports.Objects
             return cell;
         }
 
-        public static ICell SetCellValue<T>(this ISheet worksheet, int rowPosition, string columnLetter, T sourceObject, string FieldName)
+        public static ICell SetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, System.Data.DataRow datarow, string FieldName)
         {
             try
             {
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
 
+                var obj = datarow[FieldName];
+                if (obj == null)
+                {
+                    return worksheet.SetCellType(rowPosition, columnPosition, CellType.Blank);
+                }
+                if (obj.isDateTime())
+                {
+                    var c = TypeDescriptor.GetConverter(obj.GetType());
+                    if (c.CanConvertTo(obj.GetType()))
+                        return worksheet.SetCellValue(rowPosition, columnPosition, (DateTime)c.ConvertTo(obj, DateTime.Now.GetType()));
+                    else
+                        return worksheet.SetCellValue(rowPosition, columnPosition, (DateTime)obj);
+                }
+                else if (obj.isDouble())
+                {
+                    worksheet.SetCellType(rowPosition, columnPosition, CellType.Numeric);
+                    var c = TypeDescriptor.GetConverter(obj.GetType());
+                    if (c.CanConvertTo(obj.GetType()))
+                        return worksheet.SetCellValue(rowPosition, columnPosition, (double)c.ConvertTo(obj, 0.0.GetType()));
+                    else
+                        return worksheet.SetCellValue(rowPosition, columnPosition, Convert.ToDouble(obj));
+                }
+                else if (obj.isBool())
+                {
+                    worksheet.SetCellType(rowPosition, columnPosition, CellType.Boolean);
+                    return worksheet.SetCellValue(rowPosition, columnPosition, (bool)obj);
+                }
+                else
+                {
+                    worksheet.SetCellType(rowPosition, columnPosition, CellType.String);
+                    return worksheet.SetCellValue(rowPosition, columnPosition, (string)obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1} for Field={2}.  {3}", rowPosition, columnLetter, FieldName, ex.Message));
+            }
+        }
+
+        public static ICell SetCellValue<T>(this ISheet worksheet, int rowPosition, string columnLetter, T sourceObject, string FieldName)
+        {
+            try
+            {
+                int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
                 var accessor = TypeAccessor.Create(sourceObject.GetType());
                 var obj = accessor[sourceObject, FieldName];
                 if (obj == null)
