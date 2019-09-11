@@ -93,7 +93,7 @@ namespace SummitReports.Objects
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
 
                 var obj = datarow[FieldName];
-                if (obj == null)
+                if ((obj == null) || (obj == System.DBNull.Value))
                 {
                     return worksheet.SetCellType(rowPosition, columnPosition, CellType.Blank);
                 }
