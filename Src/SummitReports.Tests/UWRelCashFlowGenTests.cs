@@ -37,19 +37,20 @@ namespace SummitReports.Tests
         }
 
         [Fact]
-        public async void SampleReportGenTestOk()
-        {
-            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
-            var rpt = new SampleReport();
-            var generatedFIleName = await rpt.GenerateAsync(2);
-        }
-
-        [Fact]
 
         public async void DeanSheetPresentationtGenTestOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = new DeanSheetPresentation();
+            var generatedFIleName = await rpt.GenerateAsync(2);
+        }
+
+        [Fact]
+
+        public async void REReportPresTestOk()
+        {
+            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var rpt = new REReportPres();
             var generatedFIleName = await rpt.GenerateAsync(2);
         }
     }
