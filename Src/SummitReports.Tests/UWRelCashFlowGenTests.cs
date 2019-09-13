@@ -51,7 +51,17 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = new REReportPres();
-            var generatedFIleName = await rpt.GenerateAsync(2);
+            var generatedFIleName = await rpt.GenerateAsync(37);
+        }
+
+        [Fact]
+
+        public async void NREReportPresTestOk()
+        {
+            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var rpt = new NREReportPres();
+            var generatedFIleName = await rpt.GenerateAsync(37);
         }
     }
 }
+
