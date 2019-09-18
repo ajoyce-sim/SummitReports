@@ -10,7 +10,7 @@ using System.Text;
 
 namespace SummitReports.Objects
 {
-    public static class Extentions
+    public static class NPoiExtentions
     {
         public static void SetCellValue(this ICell cell, decimal value)
         {
@@ -21,6 +21,18 @@ namespace SummitReports.Objects
             cell.CellStyle = style;
             return cell;
         }
+        /// <summary>
+        /// Special function that gives much more flexibility in applying style with different formats
+        /// </summary>
+        /// <param name="cell">Cell to apply this on</param>
+        /// <param name="npoiStyle">NPoi Object previously created</param>
+        /// <returns></returns>
+        public static ICell SetCellStyle(this ICell cell, XSSFNPoiStyle npoiStyle)
+        {
+            cell.CellStyle = npoiStyle.Render(cell);
+            return cell;
+        }
+
         private static bool isDateTime(this Object obj)
         {
             return (obj.GetType().Name.Contains("DateTime")) || (obj.GetType().UnderlyingSystemType.Name.Contains("DateTime"));
@@ -60,9 +72,9 @@ namespace SummitReports.Objects
         }
         public static void ClearStyleCache(this IWorkbook workbook)
         {
-            styleList.Clear();
+            StyleCache.Clear();
         }
-        private static Dictionary<string, ICellStyle> styleList = new Dictionary<string, ICellStyle>();
+        public static Dictionary<string, ICellStyle> StyleCache = new Dictionary<string, ICellStyle>();
         /// <summary>
         /// This will create and cache a formula with scope of the worksheet.  but not that if you set use SetCellStyle,  that whatever is defined in SetCellStyle will be overridden by anything here
         /// </summary>
@@ -71,15 +83,29 @@ namespace SummitReports.Objects
         /// <returns>ICell - The Cell it is changing</returns>
         public static ICell SetCellFormat(this ICell cell, string formatString)
         {
-            if (!styleList.ContainsKey(formatString)) { 
+            if (!StyleCache.ContainsKey(formatString))
+            {
                 var sheet = cell.Sheet.Workbook;
                 ICellStyle cs = sheet.CreateCellStyle();
                 cs.DataFormat = sheet.CreateDataFormat().GetFormat(formatString);
-                styleList.Add(formatString, cs);
+                StyleCache.Add(formatString, cs);
             }
-            cell.CellStyle = styleList[formatString];
+            cell.CellStyle = StyleCache[formatString];
             return cell;
         }
+
+        /// <summary>
+        /// Special function that gives much more flexibility in applying style with different formats
+        /// </summary>
+        /// <param name="cell">Cell to apply this on</param>
+        /// <param name="npoiStyle">NPoi Object previously created</param>
+        /// <returns></returns>
+        public static ICell SetCellFormat(this ICell cell, XSSFNPoiStyle npoiStyle)
+        {
+            cell.CellStyle = npoiStyle.Render(cell);
+            return cell;
+        }
+
         public static ICell SetCellFormula(this ICell cell, string formulaString)
         {
             cell.SetCellFormula(formulaString);

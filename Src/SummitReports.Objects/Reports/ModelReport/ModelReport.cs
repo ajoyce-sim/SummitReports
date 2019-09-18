@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using System.Text;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace SummitReports.Objects
 {
@@ -60,22 +61,33 @@ namespace SummitReports.Objects
                 /* Using ADO.NET Specified */
                 string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_RelationshipCashFlow] WHERE [uwRelationshipId]=@p0 ORDER BY CashFlowDate ASC;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
                 var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, uwRelationshipId);
-                System.Data.DataTable firstResultSet = retDataSet.Tables[0];
-                System.Data.DataRow firstrow = firstResultSet.Rows[0];
-                foreach (System.Data.DataRow row in firstResultSet.Rows)
-                {
-                    sheet.SetCellValue(1, "D", "@DR1->");
-                    sheet.SetCellValue(1, "E", row, "uwRelationshipId");
-                    sheet.SetCellValue(2, "D", "@DR1->");
-                    sheet.SetCellValue(2, "E", row, "RelationshipName");
-                }
-                System.Data.DataTable secondResultSet = retDataSet.Tables[1];
-                foreach (System.Data.DataRow row in secondResultSet.Rows)
-                {
-                    sheet.SetCellValue(3, "D", "@DR2->");
-                    sheet.SetCellValue(3, "E", row, "ThisDate");
-                }
+                DataTable firstResultSet = retDataSet.Tables[0];
+                DataRow firstRow = firstResultSet.Rows[0];
+                sheet.SetCellValue(1, "D", "@DR1->");
+                sheet.SetCellValue(1, "E", firstRow, "uwRelationshipId");
+                sheet.SetCellValue(2, "D", "@DR1->");
+                sheet.SetCellValue(2, "E", firstRow, "RelationshipName");
 
+
+                System.Data.DataTable secondResultSet = retDataSet.Tables[1];
+                DataRow firstRow2nd = secondResultSet.Rows[0];
+                sheet.SetCellValue(3, "D", "@DR2->");
+                sheet.SetCellValue(3, "E", firstRow2nd, "ThisDate");
+                
+                var currentRow = 4;
+                //var npoiBorderStyle = new XSSFNPoiStyle() { Border = CellBorder.All, FontColor = new XSSFColor(System.Drawing.Color.Red) };
+                var npoiBorderStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, FontColor = IndexedColors.Red.AsXSSFColor(), BackgroundColor = IndexedColors.Green.AsXSSFColor() };
+                sheet.CreateRow(currentRow);
+                sheet.SetCellValue(currentRow, "A", "@DR2->").SetCellStyle(npoiBorderStyle);                
+                sheet.SetCellValue(currentRow, "E", firstRow2nd, "ThisDate").SetCellStyle(npoiBorderStyle.SetFormatStyle(FormatStyle.Date));
+                sheet.SetCellValue(currentRow, "B", 999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle("0,000.00"));
+                sheet.SetCellValue(currentRow, "C", 999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle(FormatStyle.Currency));
+                sheet.SetCellValue(currentRow, "D", 99999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle("#,##0.0000"));
+                npoiBorderStyle.FillPattern= FillPattern.SolidForeground;
+                npoiBorderStyle.FillForegroundColor = IndexedColors.Pink.AsXSSFColor();
+                npoiBorderStyle.IsBold = true;
+                sheet.SetCellValue(currentRow, "F", firstRow2nd, "ThisDate").SetCellStyle(npoiBorderStyle.SetFormatStyle("mm/dd"));
+                currentRow++;
                 SaveToFile(this.GeneratedFileName);
                 return this.GeneratedFileName;
             }
