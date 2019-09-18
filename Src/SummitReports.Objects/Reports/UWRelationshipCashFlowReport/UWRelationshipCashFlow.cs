@@ -113,22 +113,8 @@ namespace SummitReports.Objects
                     sheet.SetCellValue(17, "G", uwRelItem, "MiscIncome5Label");
                     sheet.SetCellValue(17, "H", uwRelItem, "MiscIncome6Label");
 
-                    // create bordered cell style
-                    XSSFCellStyle cashFlowCellStyle = (XSSFCellStyle)workbook.CreateCellStyle();
-                    cashFlowCellStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
-                    cashFlowCellStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
-                    cashFlowCellStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
-                    cashFlowCellStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
-                    cashFlowCellStyle.BottomBorderColor = IndexedColors.Black.Index;
-                    cashFlowCellStyle.TopBorderColor = IndexedColors.Black.Index;
-                    cashFlowCellStyle.LeftBorderColor = IndexedColors.Black.Index;
-                    cashFlowCellStyle.RightBorderColor = IndexedColors.Black.Index;
-                    cashFlowCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.BOTTOM, new NPOI.XSSF.UserModel.XSSFColor(System.Drawing.Color.Black));
-                    cashFlowCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.LEFT, new NPOI.XSSF.UserModel.XSSFColor(System.Drawing.Color.Black));
-                    cashFlowCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.TOP, new NPOI.XSSF.UserModel.XSSFColor(System.Drawing.Color.Black));
-                    cashFlowCellStyle.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.RIGHT, new NPOI.XSSF.UserModel.XSSFColor(System.Drawing.Color.Black));
                     var formatStr = @"_(* #,##0_);_(* (#,##0);_(* "" - ""??_);_(@_)";
-                    cashFlowCellStyle.DataFormat = workbook.CreateDataFormat().GetFormat(formatStr);
+                    var cashFlowCellStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, CellFormat = formatStr };
 
                     var iRow = 0;
                     foreach (var cashFlowItem in relCFdata)
