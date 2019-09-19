@@ -76,11 +76,11 @@ namespace SummitReports.Objects
                 
                 var currentRow = 4;
                 //var npoiBorderStyle = new XSSFNPoiStyle() { Border = CellBorder.All, FontColor = new XSSFColor(System.Drawing.Color.Red) };
-                var npoiBorderStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, FontColor = IndexedColors.Red.AsXSSFColor(), BackgroundColor = IndexedColors.Green.AsXSSFColor() };
+                var npoiBorderStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, FontColor = IndexedColors.Red.AsXSSFColor(), FillForegroundColor = IndexedColors.Green.AsXSSFColor() };
                 sheet.CreateRow(currentRow);
                 sheet.SetCellValue(currentRow, "A", "@DR2->").SetCellStyle(npoiBorderStyle);                
                 sheet.SetCellValue(currentRow, "E", firstRow2nd, "ThisDate").SetCellStyle(npoiBorderStyle.SetFormatStyle(FormatStyle.Date));
-                sheet.SetCellValue(currentRow, "B", 999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle("0,000.00"));
+                sheet.SetCellValue(currentRow, "B", 999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle(FormatStyle.Default));
                 sheet.SetCellValue(currentRow, "C", 999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle(FormatStyle.Currency));
                 sheet.SetCellValue(currentRow, "D", 99999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle("#,##0.0000"));
                 npoiBorderStyle.FillPattern= FillPattern.SolidForeground;

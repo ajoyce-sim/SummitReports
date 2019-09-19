@@ -55,12 +55,12 @@ namespace SummitReports.Objects
             return ((obj.GetType().Name.Contains("String")) || (obj.GetType().UnderlyingSystemType.Name.Contains("string")));
         }
 
-        private static ICell GetCell(this ISheet worksheet, int rowPosition, int columnPosition)
+        public static ICell GetCell(this ISheet worksheet, int rowPosition, int columnPosition)
         {
             var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
             return row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
         }
-        private static ICell GetCell(this ISheet worksheet, int rowPosition, string columnLetter)
+        public static ICell GetCell(this ISheet worksheet, int rowPosition, string columnLetter)
         {
             int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
             return worksheet.GetCell(rowPosition, columnPosition);

@@ -54,6 +54,7 @@ namespace SummitReports.Objects
                 System.Data.DataTable firstResultSet = retDataSet.Tables[0];
                 var iRow = 0;
                 var iRel = 0;
+                var iColCnt = 1;
                 foreach (System.Data.DataRow row in firstResultSet.Rows)
                 {
                     
@@ -66,24 +67,50 @@ namespace SummitReports.Objects
                         iSheet++;
                         this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
                         iRow = 0;
+                        iColCnt = 1;
                         iRel = (int)row["uwRelationshipId"];
                     }
-                    
+
+                    var formatStr = @"_(* #,##0_);_(* (#,##0);_(* "" - ""??_);_(@_)";
+                    var RECellStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, CellFormat = formatStr };
+
+                    RECellStyle.CellFormat = "@";
                     sheet.SetCellValue(3, "B", row, "RptHeader");
                     sheet.CreateRow(iRow + 8);
-                    sheet.SetCellValue(iRow + 8, "B", row, "CollateralDescriptionTxt");
-                    sheet.SetCellValue(iRow + 8, "C", row, "Size");
-                    sheet.SetCellValue(iRow + 8, "D", row, "SizeMetricDesc");
-                    sheet.SetCellValue(iRow + 8, "E", row, "CollateralFullAddress");
-                    sheet.SetCellValue(iRow + 8, "F", row, "Comments");
-                    sheet.SetCellValue(iRow + 8, "G", row, "MRAppraisalDate");
-                    sheet.SetCellValue(iRow + 8, "H", row, "MRAppraisalValue");
-                    sheet.SetCellValue(iRow + 8, "I", row, "MRAppraisalValuetoMetric");
-                    sheet.SetCellValue(iRow + 8, "J", row, "BPOValueCRE");
-                    sheet.SetCellValue(iRow + 8, "K", row, "BPOValueCREtoMetric");
-                    sheet.SetCellValue(iRow + 8, "L", row, "SIMValue");
-                    sheet.SetCellValue(iRow + 8, "M", row, "SIMValuetoMetric");
+                    sheet.SetCellValue(iRow + 8, "B", row, "CollateralDescriptionTxt").SetCellStyle(RECellStyle);
+                    RECellStyle.CellFormat = "#,##0.00";
+                    sheet.SetCellValue(iRow + 8, "C", row, "Size").SetCellStyle(RECellStyle);
+                    RECellStyle.CellFormat = "@";
+                    sheet.SetCellValue(iRow + 8, "D", row, "SizeMetricDesc").SetCellStyle(RECellStyle); 
+                    sheet.SetCellValue(iRow + 8, "E", row, "CollateralFullAddress").SetCellStyle(RECellStyle); 
+                    sheet.SetCellValue(iRow + 8, "F", row, "Comments").SetCellStyle(RECellStyle);
+                    RECellStyle.CellFormat = "mm/dd/yyy";
+                    sheet.SetCellValue(iRow + 8, "G", row, "MRAppraisalDate").SetCellStyle(RECellStyle);
+                    RECellStyle.CellFormat = "#,##0.00";
+                    sheet.SetCellValue(iRow + 8, "H", row, "MRAppraisalValue").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 8, "I", row, "MRAppraisalValuetoMetric").SetCellStyle(RECellStyle);
+                    RECellStyle.CellFormat = "#,##0.00";
+                    sheet.SetCellValue(iRow + 8, "J", row, "BPOValueCRE").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 8, "K", row, "BPOValueCREtoMetric").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 8, "L", row, "SIMValue").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 8, "M", row, "SIMValuetoMetric").SetCellStyle(RECellStyle);
+
+                    if (iColCnt == (int)row["CollateralRECnt"])
+                    {
+                        //sheet.CreateRow(18 + iRow);
+                        //sheet.SetCellValue(18 + iRow, "C", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(C18:C{0})", (18 + iRow - 2)));
+                        sheet.CreateRow(iRow + 9);
+                        RECellStyle.IsBold = true; 
+                        sheet.SetCellValue(iRow + 9, "B", "TotalS:").SetCellStyle(RECellStyle);
+                        sheet.SetCellValue(iRow + 9, "H", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(H8:H{0})", (9 + iRow - 1)));
+                        sheet.SetCellValue(iRow + 9, "J", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(J8:J{0})", (9 + iRow - 1)));
+                        sheet.SetCellValue(iRow + 9, "L", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(L8:L{0})", (9 + iRow - 1)));
+                        RECellStyle.IsBold = false;
+                    }
+
                     iRow++;
+                    iColCnt++;
+
                 }
 
                 SaveToFile(this.GeneratedFileName);
