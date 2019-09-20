@@ -61,54 +61,54 @@ namespace SummitReports.Objects
                 {
                     if (iRow == 1) // Populate Bid Pool Header
                     {
-                        sheet.SetCellValue(2, "B", row, "BidPool");
+                        sheet.SetCellValue(1, "B", row, "BidPool");
                     }
 
-                    sheet.CreateRow(iRow + 4);
+                    sheet.CreateRow(iRow + 3);
                     DSCellStyle.CellFormat = "@";
-                    sheet.SetCellValue(iRow + 4, "B", row, "RelationshipName").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "C", row, "BidSubPoolName").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "D", row, "UW").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "B", row, "RelationshipName").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "C", row, "BidSubPoolName").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "D", row, "UW").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "#,###";
-                    sheet.SetCellValue(iRow + 4, "E", row, "LoanCount").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "E", row, "LoanCount").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "#,###.00";
-                    sheet.SetCellValue(iRow + 4, "F", row, "UPBSum").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "G", row, "BidAmount").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "F", row, "UPBSum").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "G", row, "BidAmount").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "0.0%";
-                    sheet.SetCellValue(iRow + 4, "H", row, "BidUPB").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "I", row, "DiscountRate").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "J", row, "TrailConC").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "K", row, "ProjConC").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "L", row, "Recovery").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "H", row, "BidUPB").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "I", row, "DiscountRate").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "J", row, "TrailConC").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "K", row, "ProjConC").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "L", row, "Recovery").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "#,###.00";
-                    sheet.SetCellValue(iRow + 4, "M", row, "MOIC").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "M", row, "MOIC").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "mm/dd/yyyy";
-                    sheet.SetCellValue(iRow + 4, "N", row, "AppraisalDate").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "N", row, "AppraisalDate").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "#,###.00";
-                    sheet.SetCellValue(iRow + 4, "O", row, "AppraisalValue").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "P", row, "BusinessAssets").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "Q", row, "BankTotal").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "R", row, "BPOValue").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "S", row, "SIMValue").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "O", row, "AppraisalValue").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "P", row, "BusinessAssets").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "Q", row, "BankTotal").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "R", row, "BPOValue").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "S", row, "SIMValue").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "0.0%";
-                    sheet.SetCellValue(iRow + 4, "T", row, "BidAppr").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "U", row, "BidBPO").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "V", row, "BidSIMValue").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "T", row, "BidAppr").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "U", row, "BidBPO").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "V", row, "BidSIMValue").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "#,###.00";
-                    sheet.SetCellValue(iRow + 4, "W", row, "PHLast3mth").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "X", row, "PHLast6mth").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "Y", row, "PHLast9mth").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "Z", row, "PHLast12mth").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "AA", row, "Recourse").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "AB", row, "PrimaryCollateralType").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "W", row, "PHLast3mth").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "X", row, "PHLast6mth").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "Y", row, "PHLast9mth").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "Z", row, "PHLast12mth").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "AA", row, "Recourse").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "AB", row, "PrimaryCollateralType").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "#";
-                    sheet.SetCellValue(iRow + 4, "AC", row, "YearBuilt").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "AC", row, "YearBuilt").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "@";
-                    sheet.SetCellValue(iRow + 4, "AD", row, "REUnit").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "AD", row, "REUnit").SetCellStyle(DSCellStyle);
                     DSCellStyle.CellFormat = "#,###.00";
-                    sheet.SetCellValue(iRow + 4, "AE", row, "REBasis").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "AF", row, "PrimaryLocation").SetCellStyle(DSCellStyle);
-                    sheet.SetCellValue(iRow + 4, "AG", row, "Eyes").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "AE", row, "REBasis").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "AF", row, "PrimaryLocation").SetCellStyle(DSCellStyle);
+                    sheet.SetCellValue(iRow + 3, "AG", row, "Eyes").SetCellStyle(DSCellStyle);
 
                     iRow++;
                 }

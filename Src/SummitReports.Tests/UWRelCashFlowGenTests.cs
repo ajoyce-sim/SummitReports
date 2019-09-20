@@ -52,7 +52,7 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = new REReportPres();
-            var generatedFIleName = await rpt.GenerateAsync(29);
+            var generatedFIleName = await rpt.GenerateAsync(37);
         }
 
         [Fact]

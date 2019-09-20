@@ -52,13 +52,13 @@ namespace SummitReports.Objects
                 string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT top(16) * FROM [UW].[vw_CollateralRE] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
                 var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
                 System.Data.DataTable firstResultSet = retDataSet.Tables[0];
-                var iRow = 0;
+                var iRow = 1;
                 var iRel = 0;
                 var iColCnt = 1;
                 foreach (System.Data.DataRow row in firstResultSet.Rows)
                 {
                     
-                    if (iRow ==0)
+                    if (iRow == 1)
                     {
                         iRel = (int) row["uwRelationshipId"];
                     }
@@ -66,45 +66,48 @@ namespace SummitReports.Objects
                     {
                         iSheet++;
                         this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
-                        iRow = 0;
+                        iRow = 1;
                         iColCnt = 1;
                         iRel = (int)row["uwRelationshipId"];
                     }
 
                     var formatStr = @"_(* #,##0_);_(* (#,##0);_(* "" - ""??_);_(@_)";
-                    var RECellStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, CellFormat = formatStr };
+                    var RECellStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, CellFormat = formatStr, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left };
 
                     RECellStyle.CellFormat = "@";
-                    sheet.SetCellValue(3, "B", row, "RptHeader");
-                    sheet.CreateRow(iRow + 8);
-                    sheet.SetCellValue(iRow + 8, "B", row, "CollateralDescriptionTxt").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(2, "B", row, "RptHeader");
+                    sheet.CreateRow(iRow + 6);
+                    RECellStyle.WrapText = true;
+                    sheet.SetCellValue(iRow + 6, "B", row, "CollateralDescriptionTxt").SetCellStyle(RECellStyle);
                     RECellStyle.CellFormat = "#,##0.00";
-                    sheet.SetCellValue(iRow + 8, "C", row, "Size").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 6, "C", row, "Size").SetCellStyle(RECellStyle);
                     RECellStyle.CellFormat = "@";
-                    sheet.SetCellValue(iRow + 8, "D", row, "SizeMetricDesc").SetCellStyle(RECellStyle); 
-                    sheet.SetCellValue(iRow + 8, "E", row, "CollateralFullAddress").SetCellStyle(RECellStyle); 
-                    sheet.SetCellValue(iRow + 8, "F", row, "Comments").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 6, "D", row, "SizeMetricDesc").SetCellStyle(RECellStyle); 
+                    sheet.SetCellValue(iRow + 6, "E", row, "CollateralFullAddress").SetCellStyle(RECellStyle); 
+                    sheet.SetCellValue(iRow + 6, "F", row, "Comments").SetCellStyle(RECellStyle);
                     RECellStyle.CellFormat = "mm/dd/yyy";
-                    sheet.SetCellValue(iRow + 8, "G", row, "MRAppraisalDate").SetCellStyle(RECellStyle);
+                    RECellStyle.WrapText = false;
+                    sheet.SetCellValue(iRow + 6, "G", row, "MRAppraisalDate").SetCellStyle(RECellStyle);
                     RECellStyle.CellFormat = "#,##0.00";
-                    sheet.SetCellValue(iRow + 8, "H", row, "MRAppraisalValue").SetCellStyle(RECellStyle);
-                    sheet.SetCellValue(iRow + 8, "I", row, "MRAppraisalValuetoMetric").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 6, "H", row, "MRAppraisalValue").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 6, "I", row, "MRAppraisalValuetoMetric").SetCellStyle(RECellStyle);
                     RECellStyle.CellFormat = "#,##0.00";
-                    sheet.SetCellValue(iRow + 8, "J", row, "BPOValueCRE").SetCellStyle(RECellStyle);
-                    sheet.SetCellValue(iRow + 8, "K", row, "BPOValueCREtoMetric").SetCellStyle(RECellStyle);
-                    sheet.SetCellValue(iRow + 8, "L", row, "SIMValue").SetCellStyle(RECellStyle);
-                    sheet.SetCellValue(iRow + 8, "M", row, "SIMValuetoMetric").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 6, "J", row, "BPOValueCRE").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 6, "K", row, "BPOValueCREtoMetric").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 6, "L", row, "SIMValue").SetCellStyle(RECellStyle);
+                    sheet.SetCellValue(iRow + 6, "M", row, "SIMValuetoMetric").SetCellStyle(RECellStyle);
+                    
 
                     if (iColCnt == (int)row["CollateralRECnt"])
                     {
                         //sheet.CreateRow(18 + iRow);
                         //sheet.SetCellValue(18 + iRow, "C", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(C18:C{0})", (18 + iRow - 2)));
-                        sheet.CreateRow(iRow + 9);
+                        sheet.CreateRow(iRow + 7);
                         RECellStyle.IsBold = true; 
-                        sheet.SetCellValue(iRow + 9, "B", "TotalS:").SetCellStyle(RECellStyle);
-                        sheet.SetCellValue(iRow + 9, "H", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(H8:H{0})", (9 + iRow - 1)));
-                        sheet.SetCellValue(iRow + 9, "J", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(J8:J{0})", (9 + iRow - 1)));
-                        sheet.SetCellValue(iRow + 9, "L", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(L8:L{0})", (9 + iRow - 1)));
+                        sheet.SetCellValue(iRow + 7, "B", "TotalS:").SetCellStyle(RECellStyle);
+                        sheet.SetCellValue(iRow + 7, "H", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(H8:H{0})", (7 + iRow )));
+                        sheet.SetCellValue(iRow + 7, "J", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(J8:J{0})", (7 + iRow )));
+                        sheet.SetCellValue(iRow + 7, "L", 0.0).SetCellStyle(RECellStyle).SetCellFormula(string.Format("SUM(L8:L{0})", (7 + iRow )));
                         RECellStyle.IsBold = false;
                     }
 
@@ -112,6 +115,9 @@ namespace SummitReports.Objects
                     iColCnt++;
 
                 }
+                sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("1"));
+                workbook.SetSheetName(workbook.NumberOfSheets - 1, "XXX");
+
 
                 SaveToFile(this.GeneratedFileName);
                 return this.GeneratedFileName;
