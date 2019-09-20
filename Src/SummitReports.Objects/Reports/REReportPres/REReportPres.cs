@@ -32,6 +32,8 @@ namespace SummitReports.Objects
         {
             try
             {
+                // Initialize the workbook
+
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
                 var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
@@ -48,8 +50,26 @@ namespace SummitReports.Objects
                 }
                 this.workbook.ClearStyleCache();
 
-                /* Using ADO.NET Specified */
-                string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT top(16) * FROM [UW].[vw_CollateralRE] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
+                // Generate a Sheet for each relationship
+
+                string sSQL1 = @"SET ANSI_WARNINGS OFF; SELECT COUNT(*) AS TabCnt FROM UW.tbl_Relationship WHERE BidPoolId =@p0;";
+                var retTabCnt = await MarsDb.QueryAsDataSetAsync(sSQL1, BidPoolId);
+                System.Data.DataTable aResultSet = retTabCnt.Tables[0];
+                var iTabCnt = 0;
+                foreach (System.Data.DataRow a in aResultSet.Rows)
+                { iTabCnt = (int)a["TabCnt"]; }
+
+                for (int x = 2; x < iTabCnt + 1; x++)
+                {
+                    sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("1"));
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, x.ToString());
+                }
+                
+                // Return to sheet "1"
+                this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
+
+                // Get Dataset for report using ADO 
+                string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRE] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
                 var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
                 System.Data.DataTable firstResultSet = retDataSet.Tables[0];
                 var iRow = 1;
@@ -115,9 +135,6 @@ namespace SummitReports.Objects
                     iColCnt++;
 
                 }
-                sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("1"));
-                workbook.SetSheetName(workbook.NumberOfSheets - 1, "XXX");
-
 
                 SaveToFile(this.GeneratedFileName);
                 return this.GeneratedFileName;
