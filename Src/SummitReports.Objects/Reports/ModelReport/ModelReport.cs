@@ -29,7 +29,7 @@ namespace SummitReports.Objects
         /// </summary>
         /// <param name="uwRelationshipId"></param>
         /// <returns>Name of the file generated</returns>
-        public async Task<string> GenerateAsync(int uwRelationshipId)
+        public async Task<string> GenerateAsync(int BidPoolId)
         {
             try
             {
@@ -44,31 +44,26 @@ namespace SummitReports.Objects
                 using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
                 {
                     this.workbook = new XSSFWorkbook(file);
-                    this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex("Sheet1"));
+                    this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex("MODEL"));
                 }
                 this.workbook.ClearStyleCache();
+                /* VERY IMPORTANT NOTE - if you mess with the template,  sometimes you may have to Build->Clear Solution before the DLL that contains your template will get refreshed */
 
-                /* Using Model Specified */ 
-                string sSQL = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_RelationshipCashFlow] WHERE [uwRelationshipId]=@p0 ORDER BY CashFlowDate ASC;";
-                var dataArr = await MarsDb.Query<UWRelationshipDTO>(sSQL, uwRelationshipId);
-                foreach (var data in dataArr)
-                {
-                    sheet.SetCellValue(1, "B", data, "uwRelationshipId");
-                    sheet.SetCellValue(2, "B", data, "Underwriter");
-                    sheet.SetCellValue(3, "B", "LITERAL DATA");
-                }
 
-                /* Using ADO.NET Specified */
-                string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_RelationshipCashFlow] WHERE [uwRelationshipId]=@p0 ORDER BY CashFlowDate ASC;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
-                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, uwRelationshipId);
+                /* Start Your Sheet Creation Code Here */
+                var standardStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, FontColor = IndexedColors.Red.AsXSSFColor(), BackgroundColor = IndexedColors.Green.AsXSSFColor() };
+                var boldStyle = new XSSFNPoiStyle() { FillPattern = FillPattern.SolidForeground, FillForegroundColor = IndexedColors.PaleBlue.AsXSSFColor(), IsBold = true, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left, WrapText = true };
+
+                string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_Relationship] WHERE BidPoolId=@p0;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
+                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
                 DataTable firstResultSet = retDataSet.Tables[0];
-                DataRow firstRow = firstResultSet.Rows[0];
-                sheet.SetCellValue(1, "D", "@DR1->");
-                sheet.SetCellValue(1, "E", firstRow, "uwRelationshipId");
-                sheet.SetCellValue(2, "D", "@DR1->");
-                sheet.SetCellValue(2, "E", firstRow, "RelationshipName");
+                foreach( DataRow row in firstResultSet.Rows)
+                {
+                    
+                    sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("MODEL"));
+                    workbook.SetSheetName(workbook.NumberOfSheets-1, row["RelationshipName"].ToString());
 
-
+<<<<<<< HEAD
                 System.Data.DataTable secondResultSet = retDataSet.Tables[1];
                 DataRow firstRow2nd = secondResultSet.Rows[0];
                 sheet.SetCellValue(3, "D", "@DR2->");
@@ -88,6 +83,24 @@ namespace SummitReports.Objects
                 npoiBorderStyle.IsBold = true;
                 sheet.SetCellValue(currentRow, "F", firstRow2nd, "ThisDate").SetCellStyle(npoiBorderStyle.SetFormatStyle("mm/dd"));
                 currentRow++;
+=======
+                    sheet.SetCellValue(0, "D", "@DR1->");
+                    sheet.SetCellValue(0, "E", row, "uwRelationshipId").SetCellStyle(standardStyle);
+                    sheet.SetCellValue(1, "D", "@DR2->");
+                    sheet.SetCellValue(1, "E", row, "Underwriter").SetCellStyle(standardStyle);
+                    sheet.SetCellValue(2, "D", "@DR2->").SetCellStyle(standardStyle); ;
+                    sheet.SetCellValue(2, "E", row, "UPBSum").SetCellStyle(standardStyle.SetFormatStyle(FormatStyle.Currency));
+                    sheet.SetCellValue(3, "D", "@DR3->").SetCellStyle(standardStyle.SetFormatStyle(FormatStyle.Default));
+                    sheet.SetCellValue(3, "E", row, "CurrentStatus");
+                    sheet.SetCellValue(4, "D", "@DR4->").SetCellStyle(boldStyle);
+                    sheet.SetCellValue(4, "E", row, "ProFormaStatus").SetCellStyle(boldStyle);
+                    sheet.SetCellValue(5, "D", "@DR5->").SetCellStyle(boldStyle);
+                    sheet.SetCellValue(5, "E", row, "ExitStrategyText").SetCellStyle(boldStyle);
+                    sheet.GetRow(5).Height = 1540;
+                    sheet.SetColumnWidth("E", 9800);
+                }
+                workbook.RemoveSheetAt(this.workbook.GetSheetIndex("MODEL"));
+>>>>>>> master
                 SaveToFile(this.GeneratedFileName);
                 return this.GeneratedFileName;
             }
