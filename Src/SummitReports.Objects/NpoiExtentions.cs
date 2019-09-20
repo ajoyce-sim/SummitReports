@@ -55,12 +55,12 @@ namespace SummitReports.Objects
             return ((obj.GetType().Name.Contains("String")) || (obj.GetType().UnderlyingSystemType.Name.Contains("string")));
         }
 
-        public static ICell GetCell(this ISheet worksheet, int rowPosition, int columnPosition)
+        private static ICell GetCell(this ISheet worksheet, int rowPosition, int columnPosition)
         {
             var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
             return row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
         }
-        public static ICell GetCell(this ISheet worksheet, int rowPosition, string columnLetter)
+        private static ICell GetCell(this ISheet worksheet, int rowPosition, string columnLetter)
         {
             int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
             return worksheet.GetCell(rowPosition, columnPosition);
@@ -120,11 +120,7 @@ namespace SummitReports.Objects
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
 
                 var obj = datarow[FieldName];
-<<<<<<< HEAD
-                if ((obj == null) || (obj == System.DBNull.Value))
-=======
                 if ((obj == null) || (datarow[FieldName].Equals(System.DBNull.Value)))
->>>>>>> master
                 {
                     return worksheet.SetCellType(rowPosition, columnPosition, CellType.Blank);
                 }
@@ -173,7 +169,7 @@ namespace SummitReports.Objects
             catch (Exception)
             {
                 throw;
-            } 
+            }
         }
 
         public static ICell SetCellValue<T>(this ISheet worksheet, int rowPosition, string columnLetter, T sourceObject, string FieldName)
@@ -202,7 +198,7 @@ namespace SummitReports.Objects
                     var c = TypeDescriptor.GetConverter(obj.GetType());
                     if (c.CanConvertTo(obj.GetType()))
                         return worksheet.SetCellValue(rowPosition, columnPosition, (double)c.ConvertTo(obj, 0.0.GetType()));
-                    else 
+                    else
                         return worksheet.SetCellValue(rowPosition, columnPosition, Convert.ToDouble(obj));
                 }
                 else if (obj.isBool())

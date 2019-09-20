@@ -57,33 +57,12 @@ namespace SummitReports.Objects
                 string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_Relationship] WHERE BidPoolId=@p0;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
                 var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
                 DataTable firstResultSet = retDataSet.Tables[0];
-                foreach( DataRow row in firstResultSet.Rows)
+                foreach (DataRow row in firstResultSet.Rows)
                 {
-                    
-                    sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("MODEL"));
-                    workbook.SetSheetName(workbook.NumberOfSheets-1, row["RelationshipName"].ToString());
 
-<<<<<<< HEAD
-                System.Data.DataTable secondResultSet = retDataSet.Tables[1];
-                DataRow firstRow2nd = secondResultSet.Rows[0];
-                sheet.SetCellValue(3, "D", "@DR2->");
-                sheet.SetCellValue(3, "E", firstRow2nd, "ThisDate");
-                
-                var currentRow = 4;
-                //var npoiBorderStyle = new XSSFNPoiStyle() { Border = CellBorder.All, FontColor = new XSSFColor(System.Drawing.Color.Red) };
-                var npoiBorderStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, FontColor = IndexedColors.Red.AsXSSFColor(), FillForegroundColor = IndexedColors.Green.AsXSSFColor() };
-                sheet.CreateRow(currentRow);
-                sheet.SetCellValue(currentRow, "A", "@DR2->").SetCellStyle(npoiBorderStyle);                
-                sheet.SetCellValue(currentRow, "E", firstRow2nd, "ThisDate").SetCellStyle(npoiBorderStyle.SetFormatStyle(FormatStyle.Date));
-                sheet.SetCellValue(currentRow, "B", 999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle(FormatStyle.Default));
-                sheet.SetCellValue(currentRow, "C", 999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle(FormatStyle.Currency));
-                sheet.SetCellValue(currentRow, "D", 99999.99).SetCellStyle(npoiBorderStyle.SetFormatStyle("#,##0.0000"));
-                npoiBorderStyle.FillPattern= FillPattern.SolidForeground;
-                npoiBorderStyle.FillForegroundColor = IndexedColors.Pink.AsXSSFColor();
-                npoiBorderStyle.IsBold = true;
-                sheet.SetCellValue(currentRow, "F", firstRow2nd, "ThisDate").SetCellStyle(npoiBorderStyle.SetFormatStyle("mm/dd"));
-                currentRow++;
-=======
+                    sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("MODEL"));
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, row["RelationshipName"].ToString());
+
                     sheet.SetCellValue(0, "D", "@DR1->");
                     sheet.SetCellValue(0, "E", row, "uwRelationshipId").SetCellStyle(standardStyle);
                     sheet.SetCellValue(1, "D", "@DR2->");
@@ -100,7 +79,6 @@ namespace SummitReports.Objects
                     sheet.SetColumnWidth("E", 9800);
                 }
                 workbook.RemoveSheetAt(this.workbook.GetSheetIndex("MODEL"));
->>>>>>> master
                 SaveToFile(this.GeneratedFileName);
                 return this.GeneratedFileName;
             }
