@@ -57,7 +57,7 @@ namespace SummitReports.Objects
 
         private static ICell GetCell(this ISheet worksheet, int rowPosition, int columnPosition)
         {
-            var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+            var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
             return row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
         }
         private static ICell GetCell(this ISheet worksheet, int rowPosition, string columnLetter)
@@ -116,10 +116,11 @@ namespace SummitReports.Objects
         {
             try
             {
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
 
                 var obj = datarow[FieldName];
-                if (obj == null)
+                if ((obj == null) || (datarow[FieldName].Equals(System.DBNull.Value)))
                 {
                     return worksheet.SetCellType(rowPosition, columnPosition, CellType.Blank);
                 }
@@ -157,10 +158,25 @@ namespace SummitReports.Objects
             }
         }
 
+        public static ISheet SetColumnWidth(this ISheet thisWorksheet, string columnLetter, int width)
+        {
+            try
+            {
+                int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
+                thisWorksheet.SetColumnWidth(columnPosition, width);
+                return thisWorksheet;
+            }
+            catch (Exception)
+            {
+                throw;
+            } 
+        }
+
         public static ICell SetCellValue<T>(this ISheet worksheet, int rowPosition, string columnLetter, T sourceObject, string FieldName)
         {
             try
             {
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
                 var accessor = TypeAccessor.Create(sourceObject.GetType());
                 var obj = accessor[sourceObject, FieldName];
@@ -208,7 +224,8 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 cell.CellStyle.DataFormat = 14;
@@ -225,8 +242,9 @@ namespace SummitReports.Objects
         {
             try
             {
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 cell.CellStyle.DataFormat = 14;
@@ -244,7 +262,8 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellType(type);
                 return cell;
@@ -260,8 +279,9 @@ namespace SummitReports.Objects
         {
             try
             {
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellType(type);
                 return cell;
@@ -279,8 +299,9 @@ namespace SummitReports.Objects
         {
             try
             {
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 return cell;
@@ -297,7 +318,8 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 return cell;
@@ -314,8 +336,9 @@ namespace SummitReports.Objects
         {
             try
             {
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(((value) ? "Yes" : "No"));
                 return cell;
@@ -332,7 +355,8 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(((value) ? "Yes" : "No"));
                 return cell;
@@ -348,7 +372,8 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 return cell;
@@ -366,7 +391,8 @@ namespace SummitReports.Objects
             int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 return cell;
@@ -382,7 +408,8 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 return cell;
@@ -398,8 +425,9 @@ namespace SummitReports.Objects
         {
             try
             {
+                if (worksheet.LastRowNum < rowPosition) worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellValue(value);
                 return cell;
@@ -417,7 +445,7 @@ namespace SummitReports.Objects
             try
             {
 
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition) ?? row.CreateCell(columnPosition);
                 cell.SetCellFormula(value);
                 return cell;
@@ -433,7 +461,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
                 if (cell == null) return defaultValue;
                 return cell.NumericCellValue;
@@ -448,7 +476,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
                 if (cell == null) return defaultValue;
                 return (decimal)cell.NumericCellValue;
@@ -463,7 +491,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
                 if (cell == null) return defaultValue;
@@ -479,7 +507,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                var row = worksheet.GetRow(rowPosition - 1) ?? worksheet.CreateRow(rowPosition - 1);
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
                 if (cell == null) return defaultValue;

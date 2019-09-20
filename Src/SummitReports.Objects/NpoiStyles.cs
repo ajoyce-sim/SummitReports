@@ -152,6 +152,7 @@ namespace SummitReports.Objects
         public virtual IColor BackgroundColor { get; set; } = null;
         public virtual IColor FillForegroundColor { get; set; } = null;
         public FillPattern? FillPattern { get; set; } = null;
+        public bool? WrapText { get; set; } = null;
         public NpoiStyle()
         {
         }
@@ -285,10 +286,12 @@ namespace SummitReports.Objects
             }
             if (this.BackgroundColor != null) cellStyle.SetFillBackgroundColor(this.BackgroundColor.AsXSSFColor());
             if (this.HorizontalAlignment != null) cellStyle.Alignment = this.HorizontalAlignment.Value;
-            if (this.VerticalAlignment != null) cellStyle.SetVerticalAlignment((short)this.VerticalAlignment.Value);
+            if (this.VerticalAlignment != null) cellStyle.VerticalAlignment = this.VerticalAlignment.Value;
             if (!string.IsNullOrEmpty(this.CellFormat)) cellStyle.DataFormat = workbook.CreateDataFormat().GetFormat(this.CellFormat);
             if (this.FillForegroundColor != null) cellStyle.SetFillForegroundColor(FillForegroundColor.AsXSSFColor());
             if (this.FillPattern != null) cellStyle.FillPattern = this.FillPattern.Value;
+            if (this.WrapText != null) cellStyle.WrapText = this.WrapText.Value;
+            
 
             if (!NPoiExtentions.StyleCache.ContainsKey(thisStyleCacheKey)) NPoiExtentions.StyleCache.Remove(thisStyleCacheKey);
             NPoiExtentions.StyleCache.Add(thisStyleCacheKey, cellStyle);
