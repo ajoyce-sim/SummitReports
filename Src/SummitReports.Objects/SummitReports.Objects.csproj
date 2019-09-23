@@ -17,8 +17,10 @@
     <Version>1.0.22.0</Version>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Reports\BAReportPres\BAReportPres.xlsx" />
     <None Remove="Reports\DeanSheetPresentation\DeanSheet-Presentation.xlsx" />
     <None Remove="Reports\DeanSheetPresentation\DeanSheetPresentationTemplate.xlsx" />
+    <None Remove="Reports\LoansReportPres\LoansReportPres.xlsx" />
     <None Remove="Reports\ModelReport\ModelReportTemplate.xlsx" />
     <None Remove="Reports\REReportPres\REReportPres.xlsx" />
   </ItemGroup>
@@ -31,6 +33,8 @@
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="Reports\DeanSheetPresentation\DeanSheet-Presentation.xlsx" />
+	<EmbeddedResource Include="Reports\BAReportPres\BAReportPres.xlsx" />
+	<EmbeddedResource Include="Reports\LoansReportPres\LoansReportPres.xlsx" />
 	<EmbeddedResource Include="Reports\REReportPres\REReportPres.xlsx" />
 	<EmbeddedResource Include="Reports\ModelReport\ModelReportTemplate.xlsx" />
 	<EmbeddedResource Include="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx"></EmbeddedResource>
