@@ -57,11 +57,11 @@ namespace SummitReports.Objects
                 string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_Relationship] WHERE BidPoolId=@p0;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
                 var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
                 DataTable firstResultSet = retDataSet.Tables[0];
-                foreach( DataRow row in firstResultSet.Rows)
+                foreach (DataRow row in firstResultSet.Rows)
                 {
-                    
+
                     sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("MODEL"));
-                    workbook.SetSheetName(workbook.NumberOfSheets-1, row["RelationshipName"].ToString());
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, row["RelationshipName"].ToString());
 
                     sheet.SetCellValue(0, "D", "@DR1->");
                     sheet.SetCellValue(0, "E", row, "uwRelationshipId").SetCellStyle(standardStyle);

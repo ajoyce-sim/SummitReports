@@ -169,7 +169,7 @@ namespace SummitReports.Objects
             catch (Exception)
             {
                 throw;
-            } 
+            }
         }
 
         public static ICell SetCellValue<T>(this ISheet worksheet, int rowPosition, string columnLetter, T sourceObject, string FieldName)
@@ -198,7 +198,7 @@ namespace SummitReports.Objects
                     var c = TypeDescriptor.GetConverter(obj.GetType());
                     if (c.CanConvertTo(obj.GetType()))
                         return worksheet.SetCellValue(rowPosition, columnPosition, (double)c.ConvertTo(obj, 0.0.GetType()));
-                    else 
+                    else
                         return worksheet.SetCellValue(rowPosition, columnPosition, Convert.ToDouble(obj));
                 }
                 else if (obj.isBool())

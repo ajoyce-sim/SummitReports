@@ -120,6 +120,7 @@ namespace SummitReports.Objects
                     foreach (var cashFlowItem in relCFdata)
                     {
                         sheet.CreateRow(18 + iRow);
+                        
                         sheet.SetCellValue(18 + iRow, "A", cashFlowItem, "CashFlowDate").SetCellFormat("mmm-yy");
                         sheet.SetCellValue(18 + iRow, "B", (double)(iRow + 1)).SetCellFormat("0"); ;
                         sheet.SetCellValue(18 + iRow, "C", cashFlowItem, "Principal").SetCellStyle(cashFlowCellStyle);
@@ -141,7 +142,9 @@ namespace SummitReports.Objects
                         sheet.SetCellValue(18 + iRow, "S", cashFlowItem, "Misc").SetCellStyle(cashFlowCellStyle);
                         iRow++;
                     }
-                    iRow++; sheet.CreateRow(18 + iRow);
+                    iRow++;
+
+                    sheet.CreateRow(18 + iRow);
                     sheet.SetCellValue(18 + iRow, "C", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(C18:C{0})", (18 + iRow - 2)));
                     sheet.SetCellValue(18 + iRow, "D", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(D18:D{0})", (18 + iRow - 2)));
                     sheet.SetCellValue(18 + iRow, "E", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(E18:E{0})", (18 + iRow - 2)));
