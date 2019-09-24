@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
@@ -24,11 +25,32 @@ namespace SummitReports.Objects
         }
 
         /// <summary>
-        /// 
+        /// This will generate a Loan report for all relationships in a bid pool (one relationship per tab)
         /// </summary>
         /// <param name="BidPoolId"></param>
         /// <returns>Name of the file generated</returns>
-        public async Task<string> GenerateAsync(int BidPoolId)
+        public async Task<string> BidPoolGenerateAsync(int BidPoolId)
+        {
+            return await GenerateAsync(BidPoolId, 0);
+        }
+
+        /// <summary>
+        /// This will generate a Loan report for one Relationship (one tab)
+        /// </summary>
+        /// <param name="uwRelationshipId"></param>
+        /// <returns>Name of the file generated</returns>
+        public async Task<string> RelationshipGenerateAsync(int uwRelationshipId)
+        {
+            return await GenerateAsync(0, uwRelationshipId);
+        }
+
+        /// <summary>
+        /// This will generate a Business Asset Report for a BidPool or Relationship
+        /// </summary>
+        /// <param name="BidPoolId">If this is 0, then we will assume that we are going to use uwRelationshipId</param>
+        /// <param name="uwRelationshipId">If this is zero, then we will assume that we are going top use BidPoolId</param>
+        /// <returns>Name of the file generated</returns>
+        public async Task<string> GenerateAsync(int BidPoolId, int uwRelationshipId)
         {
             try
             {
@@ -50,9 +72,19 @@ namespace SummitReports.Objects
                 }
                 this.workbook.ClearStyleCache();
 
-                // Generate a Sheet for each relationship.
 
-                string sSQL1 = @"SET ANSI_WARNINGS OFF; SELECT COUNT(*) AS TabCnt FROM UW.tbl_Relationship WHERE BidPoolId =@p0;";
+
+                // Generate a Sheet for each relationship.  If uwRelationshipId >0 then onl one sheet is needed.
+
+                string sSQL1 = "";
+                if (uwRelationshipId == 0)
+                {
+                    sSQL1 = @"SET ANSI_WARNINGS OFF; SELECT COUNT(*) AS TabCnt FROM UW.tbl_Relationship WHERE BidPoolId =@p0;";
+                }
+                else
+                {
+                    sSQL1 = @"SET ANSI_WARNINGS OFF; SELECT 1 AS TabCnt ;";
+                }
                 var retTabCnt = await MarsDb.QueryAsDataSetAsync(sSQL1, BidPoolId);
                 System.Data.DataTable aResultSet = retTabCnt.Tables[0];
                 var iTabCnt = 0;
@@ -68,9 +100,22 @@ namespace SummitReports.Objects
                 // Return to sheet "1"
                 this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
 
-                // Get Dataset for report using ADO 
-                string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_Loans] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwLoanId ASC;";
-                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
+                // Get Dataset for report using ADO;  If uwRelationshipId <> 0 use uwRelationshipId else use BidPoolId
+
+                string sSQL2 = "";
+                DataSet retDataSet = null;
+                
+                if (uwRelationshipId == 0)
+                {
+                    sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_Loans] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwLoanId ASC;";
+                    retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
+                }
+                else
+                {
+                    sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_Loans] WHERE [uwRelationshipId]=@p0 ORDER BY uwRelationshipId ASC, uwLoanId ASC;";
+                    retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, uwRelationshipId);
+                }
+               
                 System.Data.DataTable firstResultSet = retDataSet.Tables[0];
                 var iRow = 1;
                 var iRel = 0;
@@ -98,36 +143,32 @@ namespace SummitReports.Objects
                     sheet.SetCellValue(2, "B", row, "RptHeader");
                     sheet.CreateRow(iRow + 5);
                     
-                    sheet.SetCellValue(iRow + 5, "B", row, "BidSubPoolName").SetCellStyle(LnCellStyle);
-                    sheet.SetCellValue(iRow + 5, "C", row, "RelationshipName").SetCellStyle(LnCellStyle);
-                    sheet.SetCellValue(iRow + 5, "D", row, "LoanShortName").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "B", row, "LoanShortName").SetCellStyle(LnCellStyle);
                     LnCellStyle.WrapText = true;
-                    sheet.SetCellValue(iRow + 5, "E", row, "LoanDescriptionTxt").SetCellStyle(LnCellStyle);
-                    sheet.SetCellValue(iRow + 5, "F", row, "BorrowerTxt").SetCellStyle(LnCellStyle);
-                    sheet.SetCellValue(iRow + 5, "G", row, "GuarantorTxt").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "C", row, "LoanDescriptionTxt").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "D", row, "BorrowerTxt").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "E", row, "GuarantorTxt").SetCellStyle(LnCellStyle);
                     LnCellStyle.CellFormat = "mm/dd/yyy";
-                    sheet.SetCellValue(iRow + 5, "H", row, "OriginationDate").SetCellStyle(LnCellStyle);
-                    sheet.SetCellValue(iRow + 5, "I", row, "MaturityDate").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "F", row, "OriginationDate").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "G", row, "MaturityDate").SetCellStyle(LnCellStyle);
                     LnCellStyle.CellFormat = "#,##0.00";
-                    sheet.SetCellValue(iRow + 5, "J", row, "OriginalUPB").SetCellStyle(LnCellStyle);
-                    sheet.SetCellValue(iRow + 5, "K", row, "UPB").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "H", row, "OriginalUPB").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "I", row, "UPB").SetCellStyle(LnCellStyle);
                     LnCellStyle.CellFormat = "0.0%";
-                    sheet.SetCellValue(iRow + 5, "L", row, "InterestRate").SetCellStyle(LnCellStyle);
+                    sheet.SetCellValue(iRow + 5, "J", row, "InterestRate").SetCellStyle(LnCellStyle);
                     LnCellStyle.CellFormat = "#,###";
-                    sheet.SetCellValue(iRow + 5, "M", row, "SIMValueLoan").SetCellStyle(LnCellStyle);
-
+                    sheet.SetCellValue(iRow + 5, "K", row, "SIMValueLoan").SetCellStyle(LnCellStyle);
+                    
                     if (iLnCnt == (int)row["LoansCnt"])
                     {
-                        //sheet.CreateRow(18 + iRow);
-                        //sheet.SetCellValue(18 + iRow, "C", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(C18:C{0})", (18 + iRow - 2)));
                         sheet.CreateRow(iRow + 7);
                         LnCellStyle.IsBold = true; 
                         sheet.SetCellValue(iRow + 6, "C", "Totals:").SetCellStyle(LnCellStyle);
                         LnCellStyle.CellFormat = "#,##0.00";
-                        sheet.SetCellValue(iRow + 6, "J", 0.0).SetCellStyle(LnCellStyle).SetCellFormula(string.Format("SUM(J6:J{0})", (6 + iRow )));
-                        sheet.SetCellValue(iRow + 6, "K", 0.0).SetCellStyle(LnCellStyle).SetCellFormula(string.Format("SUM(K6:K{0})", (6 + iRow )));
+                        sheet.SetCellValue(iRow + 6, "H", 0.0).SetCellStyle(LnCellStyle).SetCellFormula(string.Format("SUM(H7:H{0})", (6 + iRow )));
+                        sheet.SetCellValue(iRow + 6, "I", 0.0).SetCellStyle(LnCellStyle).SetCellFormula(string.Format("SUM(I7:I{0})", (6 + iRow )));
                         LnCellStyle.CellFormat = "#,###";
-                        sheet.SetCellValue(iRow + 6, "M", 0.0).SetCellStyle(LnCellStyle).SetCellFormula(string.Format("SUM(M6:M{0})", (6 + iRow )));
+                        sheet.SetCellValue(iRow + 6, "K", 0.0).SetCellStyle(LnCellStyle).SetCellFormula(string.Format("SUM(K7:K{0})", (6 + iRow )));
                         LnCellStyle.IsBold = false;
                     }
 
