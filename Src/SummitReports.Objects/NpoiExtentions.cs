@@ -1,6 +1,7 @@
 ﻿using FastMember;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
@@ -219,7 +220,35 @@ namespace SummitReports.Objects
 
         }
 
+        public static ISheet MergeCells(this ISheet worksheet, int firstRow, int lastRow, string firstColumn, string lastColumn)
+        {
+            if (worksheet.LastRowNum < lastRow) worksheet.CreateRow(lastRow);
+            int iFirstColumn = firstColumn.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
+            int iLastColumn = lastColumn.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
 
+            var cra1 = new NPOI.SS.Util.CellRangeAddress(firstRow, lastRow, iFirstColumn, iLastColumn);
+            worksheet.AddMergedRegion(cra1);
+            return worksheet;
+
+        }
+
+        public static CellRangeAddress MergeCellsRange(this ISheet worksheet, int firstRow, int lastRow, string firstColumn, string lastColumn)
+        {
+            if (worksheet.LastRowNum < lastRow) worksheet.CreateRow(lastRow);
+            int iFirstColumn = firstColumn.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
+            int iLastColumn = lastColumn.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
+
+            var cra1 = new NPOI.SS.Util.CellRangeAddress(firstRow, lastRow, iFirstColumn, iLastColumn);
+            worksheet.AddMergedRegion(cra1);
+            return cra1;
+
+        }
+
+        public static CellRangeAddress SetRangeStyle(this CellRangeAddress range, ISheet sheet, XSSFNPoiStyle npoiStyle)
+        {
+            npoiStyle.ApplyBorderToRange(sheet, range);
+            return range;
+        }
         public static ICell SetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, DateTime value)
         {
             try
