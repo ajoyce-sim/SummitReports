@@ -37,6 +37,6 @@
 	<EmbeddedResource Include="Reports\LoansReportPres\LoansReportPres.xlsx" />
 	<EmbeddedResource Include="Reports\REReportPres\REReportPres.xlsx" />
 	<EmbeddedResource Include="Reports\ModelReport\ModelReportTemplate.xlsx" />
-	<EmbeddedResource Include="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx"></EmbeddedResource>
+	<EmbeddedResource Include="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx" />
   </ItemGroup>
 </Project>

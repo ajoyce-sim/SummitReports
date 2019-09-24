@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
-using NPOI.SS.Util;
-using NPOI.HSSF.Util;
-using NPOI.POIFS.FileSystem;
-using NPOI.HPSF;
 using System.IO;
 using System.Reflection;
-using SummitReports.Objects.Services;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
-using System.Text;
-using System.Data.SqlClient;
 
 namespace SummitReports.Objects
 {
