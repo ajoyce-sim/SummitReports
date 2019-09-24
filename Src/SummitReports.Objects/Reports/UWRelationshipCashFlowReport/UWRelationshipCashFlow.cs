@@ -139,22 +139,22 @@ namespace SummitReports.Objects
                 sheet.SetCellValue(iRow, "A", "AssetNotes").SetCellStyle(titleStyle);
                 iRow++;
                 this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
-                sheet.SetCellValue(iRow, "A", uwRelItem, "AssetNotes").SetCellStyle(notesStyle);
+                sheet.SetCellValue(iRow, "A", uwRelItem, "Asset Notes").SetCellStyle(notesStyle);
                 iRow = iRow + 22;
 
-                sheet.SetCellValue(iRow, "A", "CollateralValuationNotes").SetCellStyle(titleStyle);
+                sheet.SetCellValue(iRow, "A", "Collateral Valuation Notes").SetCellStyle(titleStyle);
                 iRow++;
                 this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
                 sheet.SetCellValue(iRow, "A", uwRelItem, "CollateralValuationNotes").SetCellStyle(notesStyle);
                 iRow = iRow + 22;
 
-                sheet.SetCellValue(iRow, "A", "TitleUCCNotes").SetCellStyle(titleStyle);
+                sheet.SetCellValue(iRow, "A", "Title UCC Notes").SetCellStyle(titleStyle);
                 iRow++;
                 this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
                 sheet.SetCellValue(iRow, "A", uwRelItem, "TitleUCCNotes").SetCellStyle(notesStyle);
                 iRow = iRow + 22;
 
-                sheet.SetCellValue(iRow, "A", "EnvironmentalNotes").SetCellStyle(titleStyle);
+                sheet.SetCellValue(iRow, "A", "Environmental Notes").SetCellStyle(titleStyle);
                 iRow++;
                 this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
                 sheet.SetCellValue(iRow, "A", uwRelItem, "EnvironmentalNotes").SetCellStyle(notesStyle);
