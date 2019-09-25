@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
+using NPOI.SS.Util;
+using NPOI.HSSF.Util;
 
 namespace SummitReports.Objects
 {
@@ -204,7 +206,62 @@ namespace SummitReports.Objects
             }
             // Convert the input string to a byte array and compute the hash.
         }
-
+        public CellRangeAddress ApplyBorderToRange(ISheet worksheet, CellRangeAddress range)
+        {
+            var defaultCellStyle = worksheet.Workbook.GetCellStyleAt(0);
+            if (this.Border != CellBorder.None)
+            {
+                if (this.Border.HasFlag(CellBorder.Top))
+                {
+                    RegionUtil.SetBorderTop((int)this.BorderStyle, range, worksheet, worksheet.Workbook);
+                    if (this.BorderColor == null)
+                    {
+                        RegionUtil.SetTopBorderColor(defaultCellStyle.TopBorderColor, range, worksheet, worksheet.Workbook);
+                    }
+                    else
+                    {
+                        RegionUtil.SetTopBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
+                    }
+                }
+                if (this.Border.HasFlag(CellBorder.Bottom))
+                {
+                    RegionUtil.SetBorderBottom((int)this.BorderStyle, range, worksheet, worksheet.Workbook);
+                    if (this.BorderColor == null)
+                    {
+                        RegionUtil.SetBottomBorderColor(defaultCellStyle.BottomBorderColor, range, worksheet, worksheet.Workbook);
+                    }
+                    else
+                    {
+                        RegionUtil.SetBottomBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
+                    }
+                }
+                if (this.Border.HasFlag(CellBorder.Right))
+                {
+                    RegionUtil.SetBorderRight((int)this.BorderStyle, range, worksheet, worksheet.Workbook);
+                    if (this.BorderColor == null)
+                    {
+                        RegionUtil.SetRightBorderColor(defaultCellStyle.RightBorderColor, range, worksheet, worksheet.Workbook);
+                    }
+                    else
+                    {
+                        RegionUtil.SetRightBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
+                    }
+                }
+                if (this.Border.HasFlag(CellBorder.Left))
+                {
+                    RegionUtil.SetBorderLeft((int)this.BorderStyle, range, worksheet, worksheet.Workbook);
+                    if (this.BorderColor == null)
+                    {
+                        RegionUtil.SetLeftBorderColor(defaultCellStyle.LeftBorderColor, range, worksheet, worksheet.Workbook);
+                    }
+                    else
+                    {
+                        RegionUtil.SetLeftBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
+                    }
+                }
+            }
+            return range;
+        }
         protected override XSSFCellStyle Render(IWorkbook workbook, FormatStyle formatStyle)
         {
             //var saveCellFormat = this.CellFormat;
