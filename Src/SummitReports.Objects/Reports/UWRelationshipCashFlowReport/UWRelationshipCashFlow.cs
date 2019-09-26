@@ -136,10 +136,10 @@ namespace SummitReports.Objects
                 var titleStyle = new XSSFNPoiStyle() {  IsBold = true, FontHeightInPoints = 30  };
                 var notesStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, HorizontalAlignment= HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, WrapText = true };
 
-                sheet.SetCellValue(iRow, "A", "AssetNotes").SetCellStyle(titleStyle);
+                sheet.SetCellValue(iRow, "A", "Asset Notes").SetCellStyle(titleStyle);
                 iRow++;
                 this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
-                sheet.SetCellValue(iRow, "A", uwRelItem, "Asset Notes").SetCellStyle(notesStyle);
+                sheet.SetCellValue(iRow, "A", uwRelItem, "AssetNotes").SetCellStyle(notesStyle);
                 iRow = iRow + 22;
 
                 sheet.SetCellValue(iRow, "A", "Collateral Valuation Notes").SetCellStyle(titleStyle);

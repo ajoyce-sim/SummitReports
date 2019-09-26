@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using NPOI.SS.UserModel;
 using System.IO;
 using System.Reflection;
@@ -15,11 +16,32 @@ namespace SummitReports.Objects
         }
 
         /// <summary>
-        /// 
+        /// This will generate a Real Estate report for all relationships in a bid pool (one relationship per tab)
         /// </summary>
         /// <param name="BidPoolId"></param>
         /// <returns>Name of the file generated</returns>
-        public async Task<string> GenerateAsync(int BidPoolId)
+        public async Task<string> BidPoolGenerateAsync(int BidPoolId)
+        {
+            return await GenerateAsync(BidPoolId, 0);
+        }
+
+        /// <summary>
+        /// This will generate a Real Estate report for one Relationship (one tab)
+        /// </summary>
+        /// <param name="uwRelationshipId"></param>
+        /// <returns>Name of the file generated</returns>
+        public async Task<string> RelationshipGenerateAsync(int uwRelationshipId)
+        {
+            return await GenerateAsync(0, uwRelationshipId);
+        }
+
+        /// <summary>
+        /// This will generate a Business Asset Report for a BidPool or Relationship
+        /// </summary>
+        /// <param name="BidPoolId">If this is 0, then we will assume that we are going to use uwRelationshipId</param>
+        /// <param name="uwRelationshipId">If this is zero, then we will assume that we are going top use BidPoolId</param>
+        /// <returns>Name of the file generated</returns>
+        public async Task<string> GenerateAsync(int BidPoolId, int uwRelationshipId)
         {
             try
             {
@@ -43,7 +65,15 @@ namespace SummitReports.Objects
 
                 // Generate a Sheet for each relationship that has real estate collateral.
 
-                string sSQL1 = @"SET ANSI_WARNINGS OFF; SELECT COUNT(*) AS TabCnt FROM (SELECT DISTINCT r.uwRelationshipId FROM UW.tbl_Relationship AS r INNER JOIN UW.tbl_CollateralRE AS c ON r.uwRelationshipId = c.uwRelationshipId WHERE r.BidPoolId =@p0) AS a;";
+                string sSQL1 = "";
+                if (uwRelationshipId == 0)
+                {
+                    sSQL1 = @"SET ANSI_WARNINGS OFF; SELECT COUNT(*) AS TabCnt FROM (SELECT DISTINCT r.uwRelationshipId FROM UW.tbl_Relationship AS r INNER JOIN UW.tbl_CollateralRE AS c ON r.uwRelationshipId = c.uwRelationshipId WHERE r.BidPoolId =@p0) AS a;";
+                }
+                else
+                {
+                    sSQL1 = @"SET ANSI_WARNINGS OFF; SELECT 1 AS TabCnt ;";
+                }
                 var retTabCnt = await MarsDb.QueryAsDataSetAsync(sSQL1, BidPoolId);
                 System.Data.DataTable aResultSet = retTabCnt.Tables[0];
                 var iTabCnt = 0;
@@ -59,9 +89,24 @@ namespace SummitReports.Objects
                 // Return to sheet "1"
                 this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
 
-                // Get Dataset for report using ADO 
-                string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRE] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
-                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
+                // Get Dataset for report using ADO;  If uwRelationshipId <> 0 use uwRelationshipId else use BidPoolId
+
+                string sSQL2 = "";
+                DataSet retDataSet = null;
+
+                if (uwRelationshipId == 0)
+                {
+                    sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRE] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
+                    retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
+                }
+                else
+                {
+                    sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRe] WHERE [uwRelationshipId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
+                    retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, uwRelationshipId);
+                }
+                //string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRE] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
+                //var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
+
                 System.Data.DataTable firstResultSet = retDataSet.Tables[0];
                 var iRow = 1;
                 var iRel = 0;
