@@ -5,16 +5,21 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
+using SummitReport.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class REReportPres : SummitReportBaseObject
+    public class REReportPres : SummitReportBaseObject, IBidPoolRelationshipReport
     {
         public REReportPres() : base(@"REReportPres\REReportPres.xlsx")
         {
 
         }
 
+        public static IBidPoolRelationshipReport CreateInstance()
+        {
+            return ReportLoader.Instance.CreateInstance<IBidPoolRelationshipReport>("SummitReports.Objects.REReportPres");
+        }
         /// <summary>
         /// This will generate a Real Estate report for all relationships in a bid pool (one relationship per tab)
         /// </summary>

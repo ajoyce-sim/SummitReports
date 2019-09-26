@@ -5,16 +5,21 @@ using System.Reflection;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using System.Data;
+using SummitReport.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class UWRelationshipCashFlow : SummitReportBaseObject
+    public class UWRelationshipCashFlow : SummitReportBaseObject, IBidPoolRelationshipReport
     {
         public UWRelationshipCashFlow() : base(@"UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx")
         {
 
         }
 
+        public static IBidPoolRelationshipReport CreateInstance()
+        {
+            return ReportLoader.Instance.CreateInstance<IBidPoolRelationshipReport>("SummitReports.Objects.UWRelationshipCashFlow");
+        }
 
         private bool GenerateSheetForRelationship(ISheet sheet, DataRow uwRelItem, DataTable _relCFdata)
         {

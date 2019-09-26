@@ -5,14 +5,20 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
+using SummitReport.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class LoansReportPres : SummitReportBaseObject
+    public class LoansReportPres : SummitReportBaseObject, IBidPoolRelationshipReport
     {
         public LoansReportPres() : base(@"LoansReportPres\LoansReportPres.xlsx")
         {
 
+        }
+
+        public static IBidPoolRelationshipReport CreateInstance()
+        {
+            return ReportLoader.Instance.CreateInstance<IBidPoolRelationshipReport>("SummitReports.Objects.LoansReportPres");
         }
 
         /// <summary>

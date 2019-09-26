@@ -5,22 +5,27 @@ using System.Reflection;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using System.Data;
+using SummitReport.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class ModelReport : SummitReportBaseObject
+    public class ModelReport : SummitReportBaseObject, IGenericReport
     {
         public ModelReport() : base(@"ModelReport\ModelReportTemplate.xlsx")
         {
 
         }
 
+        public static IGenericReport CreateInstance()
+        {
+            return ReportLoader.Instance.CreateInstance<IGenericReport>("SummitReports.Objects.ModelReport");
+        }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="uwRelationshipId"></param>
         /// <returns>Name of the file generated</returns>
-        public async Task<string> GenerateAsync(int BidPoolId)
+        public async Task<string> GenerateAsync(int Id)
         {
             try
             {
@@ -46,7 +51,7 @@ namespace SummitReports.Objects
                 var boldStyle = new XSSFNPoiStyle() { FillPattern = FillPattern.SolidForeground, FillForegroundColor = IndexedColors.PaleBlue.AsXSSFColor(), IsBold = true, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left, WrapText = true };
 
                 string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_Relationship] WHERE BidPoolId=@p0;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
-                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
+                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, Id);
                 DataTable firstResultSet = retDataSet.Tables[0];
                 foreach (DataRow row in firstResultSet.Rows)
                 {

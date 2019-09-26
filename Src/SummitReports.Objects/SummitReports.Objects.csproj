@@ -39,4 +39,7 @@
 	<EmbeddedResource Include="Reports\ModelReport\ModelReportTemplate.xlsx" />
 	<EmbeddedResource Include="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SummitReport.Infrastructure\SummitReport.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>

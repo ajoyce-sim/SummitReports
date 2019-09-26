@@ -4,14 +4,19 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
+using SummitReport.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class DeanSheetPresentation : SummitReportBaseObject
+    public class DeanSheetPresentation : SummitReportBaseObject, IBidPoolReport
     {
         public DeanSheetPresentation() : base(@"DeanSheetPresentation\DeanSheet-Presentation.xlsx")
         {
 
+        }
+        public static IBidPoolReport CreateInstance()
+        {
+            return ReportLoader.Instance.CreateInstance<IBidPoolReport>("SummitReports.Objects.DeanSheetPresentation");
         }
 
         /// <summary>

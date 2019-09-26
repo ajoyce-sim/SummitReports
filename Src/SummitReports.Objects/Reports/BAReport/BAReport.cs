@@ -5,14 +5,20 @@ using System.Reflection;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using System.Data;
+using SummitReport.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class BAReport : SummitReportBaseObject
+    public class BAReport : SummitReportBaseObject, IBidPoolRelationshipReport
     {
         public BAReport() : base(@"BAReport\BAReport.xlsx")
         {
 
+        }
+
+        public static IBidPoolRelationshipReport CreateInstance()
+        {
+            return ReportLoader.Instance.CreateInstance<IBidPoolRelationshipReport>("SummitReports.Objects.BAReport");
         }
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace SummitReports.Objects
 
                 // Generate a Sheet for each relationship.  If uwRelationshipId <> 0 then only 1 sheet is needed.
 
-                string  sSQL1 = "";
+                string sSQL1 = "";
                 if (uwRelationshipId == 0)
                 {
                     sSQL1 = @"SET ANSI_WARNINGS OFF; SELECT COUNT(*) AS TabCnt FROM (SELECT DISTINCT r.uwRelationshipId FROM UW.tbl_Relationship AS r INNER JOIN UW.tbl_CollateralNRE AS c ON r.uwRelationshipId = c.uwRelationshipId WHERE r.BidPoolId =@p0) AS a;";
@@ -86,7 +92,7 @@ namespace SummitReports.Objects
                     sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("1"));
                     workbook.SetSheetName(workbook.NumberOfSheets - 1, x.ToString());
                 }
-                
+
                 // Return to sheet "1"
                 this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
 
@@ -110,10 +116,10 @@ namespace SummitReports.Objects
                 var iNRECnt = 1;
                 foreach (System.Data.DataRow row in firstResultSet.Rows)
                 {
-                    
+
                     if (iRow == 1)
                     {
-                        iRel = (int) row["uwRelationshipId"];
+                        iRel = (int)row["uwRelationshipId"];
                     }
                     else if (iRel != (int)row["uwRelationshipId"])
                     {
@@ -127,7 +133,7 @@ namespace SummitReports.Objects
                     var formatStr = @"_(* #,##0_);_(* (#,##0);_(* "" - ""??_);_(@_)";
                     var BACellStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, CellFormat = formatStr, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left };
 
-                    
+
                     sheet.SetCellValue(2, "B", row, "RptHeader");
                     sheet.CreateRow(iRow + 5);
                     sheet.SetCellValue(iRow + 5, "B", row, "NREItemLabel").SetCellStyle(BACellStyle);
@@ -144,7 +150,7 @@ namespace SummitReports.Objects
                         //sheet.CreateRow(18 + iRow);
                         //sheet.SetCellValue(18 + iRow, "C", 0.0).SetCellFormat(formatStr).SetCellFormula(string.Format("SUM(C18:C{0})", (18 + iRow - 2)));
                         sheet.CreateRow(iRow + 7);
-                        BACellStyle.IsBold = true; 
+                        BACellStyle.IsBold = true;
                         sheet.SetCellValue(iRow + 6, "C", "Totals:").SetCellStyle(BACellStyle);
                         BACellStyle.CellFormat = "#,###.00";
                         sheet.SetCellValue(iRow + 6, "D", 0.0).SetCellStyle(BACellStyle).SetCellFormula(string.Format("SUM(D6:D{0})", (6 + iRow)));
