@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SummitReport.Infrastructure
+namespace SummitReports.Infrastructure
 {
     public interface ISummitReportSettings
     {

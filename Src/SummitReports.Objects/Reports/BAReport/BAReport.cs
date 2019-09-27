@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using System.Data;
-using SummitReport.Infrastructure;
+using SummitReports.Infrastructure;
 
 namespace SummitReports.Objects
 {
