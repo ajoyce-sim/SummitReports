@@ -75,7 +75,7 @@ Task("Clean")
     .Does(() =>
 {
 	var ObjectBinDir = srcDir + dirSep + "SummitReports.Objects" + dirSep + "bin" + dirSep + configuration + dirSep + frameworkVersion + dirSep;
-	var InfraBinDir = srcDir + dirSep + "SummitReport.Infrastructure" + dirSep + "bin" + dirSep + configuration + dirSep + frameworkVersion + dirSep;
+	var InfraBinDir = srcDir + dirSep + "SummitReports.Infrastructure" + dirSep + "bin" + dirSep + configuration + dirSep + frameworkVersion + dirSep;
     CleanDirectory(ObjectBinDir);
     CleanDirectory(InfraBinDir);
 });

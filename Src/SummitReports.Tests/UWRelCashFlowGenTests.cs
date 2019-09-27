@@ -1,5 +1,6 @@
 using Xunit;
 using SummitReports.Objects;
+using SummitReports.Infrastructure;
 
 namespace SummitReports.Tests
 {
