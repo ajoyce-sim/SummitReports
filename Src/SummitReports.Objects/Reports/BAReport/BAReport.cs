@@ -131,6 +131,7 @@ namespace SummitReports.Objects
 
                     sheet.SetCellValue(2, "B", row, "RptHeader");
                     sheet.CreateRow(iRow + 5);
+                    BACellStyle.WrapText = true;
                     sheet.SetCellValue(iRow + 5, "B", row, "NREItemLabel").SetCellStyle(BACellStyle);
                     sheet.SetCellValue(iRow + 5, "C", row, "NREItemComments").SetCellStyle(BACellStyle);
                     BACellStyle.CellFormat = "#,###.00";

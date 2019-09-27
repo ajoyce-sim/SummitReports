@@ -134,9 +134,9 @@ namespace SummitReports.Objects
                     
                     sheet.SetCellValue(2, "B", row, "RptHeader");
                     sheet.CreateRow(iRow + 5);
-                    
-                    sheet.SetCellValue(iRow + 5, "B", row, "LoanShortName").SetCellStyle(LnCellStyle);
+
                     LnCellStyle.WrapText = true;
+                    sheet.SetCellValue(iRow + 5, "B", row, "LoanShortName").SetCellStyle(LnCellStyle);
                     sheet.SetCellValue(iRow + 5, "C", row, "LoanDescriptionTxt").SetCellStyle(LnCellStyle);
                     sheet.SetCellValue(iRow + 5, "D", row, "BorrowerTxt").SetCellStyle(LnCellStyle);
                     sheet.SetCellValue(iRow + 5, "E", row, "GuarantorTxt").SetCellStyle(LnCellStyle);
