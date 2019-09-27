@@ -1,5 +1,6 @@
 ﻿using FastMember;
 using Newtonsoft.Json.Linq;
+using SummitReports.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,6 +43,45 @@ namespace SummitReports.Objects
         static string convertName(string s)
         {
             return underscore.Replace(s.ToLower(), m => m.Groups[0].ToString().ToUpper().Replace("_", ""));
+        }
+
+        public static string AsSheetName(this string name, int id1, int id2)
+        {
+            var id = 0;
+            if ((id1 > 0) && (id2 == 0)) id = id1;
+            if ((id2 > 0) && (id1 == 0)) id = id2;
+            return name.AsSheetName(id);
+        }
+
+        public static string AsSheetName(this string name, int id)
+        {
+            var sid = id.ToString();
+            var charsToRemove = new string[] { ":", "\\", "/", "?", "*", "[", "]" };
+            foreach (var c in charsToRemove)
+            {
+                name = name.Replace(c.ToString(), "".ToString());
+            }
+            if (name.Length>31)
+            {
+                return name.Substring(0, 31 - sid.Length + 1) + "-" + sid.ToString();
+            }
+            else
+            {
+                return name;
+            }
+        }
+
+        public static string AsSheetName(this string name)
+        {
+            var charsToRemove = new string[] { ":", "\\", "/", "?", "*", "[", "]" };
+            foreach (var c in charsToRemove)
+            {
+                name = name.Replace(c.ToString(), "".ToString());
+            }
+            if (name.Length > 31)
+                return name.Substring(0, 31);
+
+            return name;
         }
 
         static T ToObject<T>(this IDataRecord r) where T : new()

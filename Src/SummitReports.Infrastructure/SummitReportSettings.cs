@@ -1,5 +1,5 @@
 ﻿
-namespace SummitReports.Objects
+namespace SummitReports.Infrastructure
 {
 	public class SummitReportSettings
     {

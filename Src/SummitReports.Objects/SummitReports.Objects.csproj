@@ -12,9 +12,9 @@
     <PackageTags>Summit Reports</PackageTags>
     <PackageReleaseNotes>This report libary can generated UW Relationship Cash Flow</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
-    <Version>1.0.24.0</Version>
+    <AssemblyVersion>1.0.31.0</AssemblyVersion>
+    <FileVersion>1.0.31.0</FileVersion>
+    <Version>1.0.31.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Reports\BAReport\BAReport.xlsx" />
@@ -29,7 +29,7 @@
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NPOI" Version="2.4.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="Reports\BAReport\BAReport.xlsx" />
@@ -38,5 +38,8 @@
 	<EmbeddedResource Include="Reports\REReportPres\REReportPres.xlsx" />
 	<EmbeddedResource Include="Reports\ModelReport\ModelReportTemplate.xlsx" />
 	<EmbeddedResource Include="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SummitReports.Infrastructure\SummitReports.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
