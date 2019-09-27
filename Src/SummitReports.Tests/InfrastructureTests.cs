@@ -35,7 +35,7 @@ namespace SummitReports.Tests
         public async void DeanSheetPresentationtGenTestOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
-            var rpt = ReportLoader.Instance.CreateInstance<IBidPoolReport>("DeanSheetPresentationA");
+            var rpt = ReportLoader.Instance.CreateInstance<IBidPoolReport>("DeanSheetPresentation");
             var generatedFIleName = await rpt.GenerateAsync(37);
         }
 
