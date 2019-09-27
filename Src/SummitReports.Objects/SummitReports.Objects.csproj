@@ -29,7 +29,7 @@
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NPOI" Version="2.4.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
 	<EmbeddedResource Include="Reports\BAReport\BAReport.xlsx" />
