@@ -18,13 +18,16 @@ var dirSep = System.IO.Path.DirectorySeparatorChar;
 var configuration = Argument("configuration", "Release");
 
 var thisDir = System.IO.Path.GetFullPath(".") + dirSep;
-var srcDir = System.IO.Path.GetFullPath(Directory("./Src/SummitReports.Objects/"));
+var srcDir = System.IO.Path.GetFullPath(Directory("./Src/"));
 var binDir = System.IO.Path.GetFullPath(Directory("./Src/SummitReports.Objects/bin/"));
-var projectFile = System.IO.Path.GetFullPath(Directory("./Src/SummitReports.Objects/SummitReports.Objects.csproj"));
+var objectProjectFile = System.IO.Path.GetFullPath(Directory("./Src/SummitReports.Objects/SummitReports.Objects.csproj"));
+var infraProjectFile = System.IO.Path.GetFullPath(Directory("./Src/SummitReports.Infrastructure/SummitReports.Infrastructure.csproj"));
 var solutionFile = System.IO.Path.GetFullPath(Directory("./Src/SummitReports.sln"));
-var frameworkVersion = Pluck(System.IO.File.ReadAllText(projectFile), @"<TargetFramework>", @"</TargetFramework>");
+var frameworkVersion = Pluck(System.IO.File.ReadAllText(objectProjectFile), @"<TargetFramework>", @"</TargetFramework>");
+
 var buildDir = binDir + dirSep + configuration + dirSep + frameworkVersion + dirSep + "Publish" + dirSep;
 var publishDir = binDir + dirSep + configuration + dirSep + frameworkVersion + dirSep + "Publish" + dirSep;
+
 var tempPath = System.IO.Path.GetTempPath();
 var deployPath = thisDir + "artifacts" + dirSep;
 var SummitNuGetPath = @"\\SIM-SVR03\Software\NuGet\";
@@ -44,7 +47,7 @@ if (IncrementMinorVersion) {
 }
 
 Information("	  AssemblyVersionAttribute: {0}... Next: {1}", CurrentAssemblyVersionAttribute, AssemblyVersionAttribute);
-Information("	      CoreVersionAttribute: {0}... Next: {1}", GetVersionInProjectFile(projectFile), AssemblyVersionAttribute);
+Information("	      CoreVersionAttribute: {0}... Next: {1}", GetVersionInobjectProjectFile(objectProjectFile), AssemblyVersionAttribute);
 Information("        		 Nuget version: {0}... Next: {1}", CurrentNugetVersion, NugetVersion);
 Information("AssemblyFileVersionAttribute : {0}", AssemblyFileVersionAttribute);
 
@@ -71,7 +74,10 @@ var buildSettings = new DotNetCoreBuildSettings
 Task("Clean")
     .Does(() =>
 {
-    CleanDirectory(buildDir);
+	var ObjectBinDir = srcDir + dirSep + "SummitReports.Objects" + dirSep + "bin" + dirSep + configuration + dirSep + frameworkVersion + dirSep;
+	var InfraBinDir = srcDir + dirSep + "SummitReport.Infrastructure" + dirSep + "bin" + dirSep + configuration + dirSep + frameworkVersion + dirSep;
+    CleanDirectory(ObjectBinDir);
+    CleanDirectory(InfraBinDir);
 });
 
 Task("Restore-NuGet-Packages")
@@ -140,6 +146,14 @@ Task("NuGet-Pack")
 
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.dll", Target = "lib/net461" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.pdb", Target = "lib/net461" },
+
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Infrastructure/bin/Release/netstandard2.0/SummitReports.Infrastructure.deps.json", Target = "lib/netstandard2.0" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Infrastructure/bin/Release/netstandard2.0/SummitReports.Infrastructure.dll", Target = "lib/netstandard2.0" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Infrastructure/bin/Release/netstandard2.0/SummitReports.Infrastructure.pdb", Target = "lib/netstandard2.0" },
+
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Infrastructure/bin/Release/net461/SummitReports.Infrastructure.dll", Target = "lib/net461" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Infrastructure/bin/Release/net461/SummitReports.Infrastructure.pdb", Target = "lib/net461" },
+
 		},
 		ArgumentCustomization = args => args.Append("")		
     };
@@ -155,7 +169,8 @@ Task("SetVersion")
 [assembly: System.Reflection.AssemblyVersionAttribute(""{1}"")]
 ", AssemblyFileVersionAttribute, AssemblyVersionAttribute);
 		System.IO.File.WriteAllText(thisDir + "Src/VersionInfo.cs", VersionData);
-		UpdateVersionInProjectFile(projectFile, AssemblyVersionAttribute);
+		UpdateVersionInobjectProjectFile(objectProjectFile, AssemblyVersionAttribute);
+		UpdateVersionInobjectProjectFile(infraProjectFile, AssemblyVersionAttribute);
 });
 
 Task("Finish")
@@ -165,8 +180,8 @@ Task("Finish")
 	if (!DirectoryExists(SummitNuGetPath)) {
 		Information(string.Format("Nuget Directory {0} does not exist, skipping nuget copy", SummitNuGetPath ));
 	} else {
-		Information(string.Format("Copying {0} to {1}", publishDir, deployPath ));
-		CopyDirectory(publishDir, deployPath);
+		//Information(string.Format("Copying {0} to {1}", publishDir, deployPath ));
+		//CopyDirectory(publishDir, deployPath);
 		var sourceFolder = thisDir + @"artifacts/";
 		foreach (string sourceFile in System.IO.Directory.GetFiles(sourceFolder, @"*", SearchOption.AllDirectories))
 		{
@@ -346,22 +361,34 @@ public IEnumerable<FileInfo> TraverseDirectory(string rootPath, Func<FileInfo, b
 	}
 }
 
-public string GetVersionInProjectFile(string projectFileName) {
-	var _VersionInfoText = System.IO.File.ReadAllText(projectFileName);
+public string GetVersionInobjectProjectFile(string objectProjectFileName) {
+	var _VersionInfoText = System.IO.File.ReadAllText(objectProjectFileName);
 	var _AssemblyFileVersionAttribute = Pluck(_VersionInfoText, "<Version>", "</Version>");
 	return _AssemblyFileVersionAttribute;
 }
 
-public bool UpdateVersionInProjectFile(string projectFileName, string NewVersion)
+public bool UpdateVersionInobjectProjectFile(string objectProjectFileName, string NewVersion)
 {
-	var _VersionInfoText = System.IO.File.ReadAllText(projectFileName);
+	var _VersionInfoText = System.IO.File.ReadAllText(objectProjectFileName);
 	var _AssemblyFileVersionAttribute = Pluck(_VersionInfoText, "<Version>", "</Version>");
 	var VersionPattern = "<Version>{0}</Version>";
 	var _AssemblyFileVersionAttributeTextOld = string.Format(VersionPattern, _AssemblyFileVersionAttribute);
 	var _AssemblyFileVersionAttributeTextNew = string.Format(VersionPattern, NewVersion);
-	var newText = _VersionInfoText.Replace(_AssemblyFileVersionAttributeTextOld, _AssemblyFileVersionAttributeTextNew);
+	_VersionInfoText = _VersionInfoText.Replace(_AssemblyFileVersionAttributeTextOld, _AssemblyFileVersionAttributeTextNew);
 
-	System.IO.File.WriteAllText(projectFileName, newText);	
+	var _AssemblyFileVersionAttribute2 = Pluck(_VersionInfoText, "<AssemblyVersion>", "</AssemblyVersion>");
+	var VersionPattern2 = "<AssemblyVersion>{0}</AssemblyVersion>";
+	var _AssemblyFileVersionAttributeTextOld2 = string.Format(VersionPattern2, _AssemblyFileVersionAttribute2);
+	var _AssemblyFileVersionAttributeTextNew2 = string.Format(VersionPattern2, NewVersion);
+	_VersionInfoText = _VersionInfoText.Replace(_AssemblyFileVersionAttributeTextOld2, _AssemblyFileVersionAttributeTextNew2);
+
+	var _AssemblyFileVersionAttribute3 = Pluck(_VersionInfoText, "<FileVersion>", "</FileVersion>");
+	var VersionPattern3 = "<FileVersion>{0}</FileVersion>";
+	var _AssemblyFileVersionAttributeTextOld3 = string.Format(VersionPattern3, _AssemblyFileVersionAttribute3);
+	var _AssemblyFileVersionAttributeTextNew3 = string.Format(VersionPattern3, NewVersion);
+	_VersionInfoText = _VersionInfoText.Replace(_AssemblyFileVersionAttributeTextOld3, _AssemblyFileVersionAttributeTextNew3);
+
+	System.IO.File.WriteAllText(objectProjectFileName, _VersionInfoText);	
 	return true;
 }
   
