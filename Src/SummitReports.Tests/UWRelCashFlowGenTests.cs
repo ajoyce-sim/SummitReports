@@ -9,7 +9,7 @@ namespace SummitReports.Tests
         public async void UWRelReportOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
-            var uwrelcf = UWRelationshipCashFlow.CreateInstance();
+            var uwrelcf = new UWRelationshipCashFlow();
             var generatedFileNameRel = await uwrelcf.RelationshipGenerateAsync(13);
             var generatedFileNameBidPool = await uwrelcf.BidPoolGenerateAsync(2);
         }
@@ -19,7 +19,7 @@ namespace SummitReports.Tests
         {
             //SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             SummitReportSettings.Instance.ConnectionString = "data source=NSWIN10VM;initial catalog=MARS;user=simsa;password=D3n^3r#$";
-            var rpt = ModelReport.CreateInstance();
+            var rpt = new ModelReport();
             var generatedFIleName = await rpt.GenerateAsync(2);
         }
 
@@ -28,7 +28,7 @@ namespace SummitReports.Tests
         public async void DeanSheetPresentationtGenTestOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
-            var rpt = DeanSheetPresentation.CreateInstance();
+            var rpt = new DeanSheetPresentation();
             var generatedFIleName = await rpt.GenerateAsync(37);
         }
 
@@ -37,7 +37,7 @@ namespace SummitReports.Tests
         public async void REReportPresTestOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
-            var rpt = REReportPres.CreateInstance();
+            var rpt = new REReportPres();
             var generatedFIleName1 = await rpt.BidPoolGenerateAsync(37);
             var generatedFIleName2 = await rpt.RelationshipGenerateAsync(268);
         }
@@ -47,9 +47,9 @@ namespace SummitReports.Tests
         public async void LoansPresTestOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
-            var rpt = LoansReportPres.CreateInstance();
-            var generatedFIleName1 = await rpt.BidPoolGenerateAsync(2);
-            var generatedFIleName2 = await rpt.RelationshipGenerateAsync(12);
+            var rpt = new LoansReportPres();
+            //var generatedFIleName1 = await rpt.BidPoolGenerateAsync(2);
+            var generatedFIleName2 = await rpt.RelationshipGenerateAsync(296);
         }
 
         [Fact]
@@ -64,5 +64,5 @@ namespace SummitReports.Tests
         }
     }
 
- }
+}
 

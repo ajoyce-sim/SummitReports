@@ -16,10 +16,6 @@ namespace SummitReports.Objects
 
         }
 
-        public static IBidPoolRelationshipReport CreateInstance()
-        {
-            return ReportLoader.Instance.CreateInstance<IBidPoolRelationshipReport>("SummitReports.Objects.REReportPres");
-        }
         /// <summary>
         /// This will generate a Real Estate report for all relationships in a bid pool (one relationship per tab)
         /// </summary>
@@ -54,7 +50,7 @@ namespace SummitReports.Objects
 
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)
@@ -85,30 +81,35 @@ namespace SummitReports.Objects
                 foreach (System.Data.DataRow a in aResultSet.Rows)
                 { iTabCnt = (int)a["TabCnt"]; }
 
-                for (int x = 2; x < iTabCnt + 1; x++)
-                {
-                    sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("1"));
-                    workbook.SetSheetName(workbook.NumberOfSheets - 1, x.ToString());
-                }
-                
-                // Return to sheet "1"
-                this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
-
                 // Get Dataset for report using ADO;  If uwRelationshipId <> 0 use uwRelationshipId else use BidPoolId
 
                 string sSQL2 = "";
                 DataSet retDataSet = null;
 
+                var id = 0; 
                 if (uwRelationshipId == 0)
                 {
                     sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRE] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
                     retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
+                    id = BidPoolId;
                 }
                 else
                 {
                     sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRe] WHERE [uwRelationshipId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
                     retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, uwRelationshipId);
+                    id = uwRelationshipId;
                 }
+
+                for (int x = 2; x < iTabCnt + 1; x++)
+                {
+                    sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("1"));
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, x.ToString().AsSheetName());
+                }
+
+                // Return to sheet "1"
+                this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
+
+
                 //string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRE] WHERE [BidPoolId]=@p0 ORDER BY uwRelationshipId ASC, uwRECollateralId ASC;";
                 //var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
 

@@ -16,10 +16,6 @@ namespace SummitReports.Objects
 
         }
 
-        public static IGenericReport CreateInstance()
-        {
-            return ReportLoader.Instance.CreateInstance<IGenericReport>("SummitReports.Objects.ModelReport");
-        }
         /// <summary>
         /// 
         /// </summary>
@@ -31,7 +27,7 @@ namespace SummitReports.Objects
             {
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)
@@ -57,7 +53,7 @@ namespace SummitReports.Objects
                 {
 
                     sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("MODEL"));
-                    workbook.SetSheetName(workbook.NumberOfSheets - 1, row["RelationshipName"].ToString());
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, row["RelationshipName"].ToString().AsSheetName());
 
                     sheet.SetCellValue(0, "D", "@DR1->");
                     sheet.SetCellValue(0, "E", row, "uwRelationshipId").SetCellStyle(standardStyle);

@@ -14,10 +14,6 @@ namespace SummitReports.Objects
         {
 
         }
-        public static IBidPoolReport CreateInstance()
-        {
-            return ReportLoader.Instance.CreateInstance<IBidPoolReport>("SummitReports.Objects.DeanSheetPresentation");
-        }
 
         /// <summary>
         /// 
@@ -30,7 +26,7 @@ namespace SummitReports.Objects
             {
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)

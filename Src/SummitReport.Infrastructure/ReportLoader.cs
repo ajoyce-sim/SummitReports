@@ -9,10 +9,11 @@ namespace SummitReport.Infrastructure
         {
         }
         protected Assembly _ReportAssembly = null;
+        private string assemblyPath = "";
         protected void LoadReportObjectAssembly()
         {
             var binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Replace(@"file:\", "");
-            var assemblyPath = binPath + @"\SummitReports.Objects.dll";
+            assemblyPath = binPath + @"\SummitReports.Objects.dll";
             try
             {
                 _ReportAssembly = Assembly.LoadFrom(assemblyPath);
@@ -47,13 +48,17 @@ namespace SummitReport.Infrastructure
 
         public T CreateInstance<T>(string ReportObjectNameToCreate)
         {
+            if (!ReportObjectNameToCreate.Contains("SummitReports.Objects.")) ReportObjectNameToCreate = "SummitReports.Objects." + ReportObjectNameToCreate;
             if (_ReportAssembly == null) LoadReportObjectAssembly();
             T obj = (T)_ReportAssembly.CreateInstance(ReportObjectNameToCreate);
             if (obj != null)
             {
                 return obj;
             }
-            return default(T);
+            else
+            {
+                throw new Exception(string.Format("Could not dynamically load object {0} from assembly {1}.  Valid Classes:{2} ", ReportObjectNameToCreate, assemblyPath, String.Join(", ", this.ReportClassList())));
+            }
         } 
         private static ReportLoader instance;
 

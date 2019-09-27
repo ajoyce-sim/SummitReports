@@ -16,11 +16,6 @@ namespace SummitReports.Objects
 
         }
 
-        public static IBidPoolRelationshipReport CreateInstance()
-        {
-            return ReportLoader.Instance.CreateInstance<IBidPoolRelationshipReport>("SummitReports.Objects.BAReport");
-        }
-
         /// <summary>
         /// This will generate a Business Asset Report for a BidPool and Relationship
         /// </summary>
@@ -56,7 +51,7 @@ namespace SummitReports.Objects
 
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)
@@ -90,7 +85,7 @@ namespace SummitReports.Objects
                 for (int x = 2; x < iTabCnt + 1; x++)
                 {
                     sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("1"));
-                    workbook.SetSheetName(workbook.NumberOfSheets - 1, x.ToString());
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, x.ToString().AsSheetName());
                 }
 
                 // Return to sheet "1"

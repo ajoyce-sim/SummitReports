@@ -15,12 +15,7 @@ namespace SummitReports.Objects
         {
 
         }
-
-        public static IBidPoolRelationshipReport CreateInstance()
-        {
-            return ReportLoader.Instance.CreateInstance<IBidPoolRelationshipReport>("SummitReports.Objects.UWRelationshipCashFlow");
-        }
-
+        
         private bool GenerateSheetForRelationship(ISheet sheet, DataRow uwRelItem, DataTable _relCFdata)
         {
             try
@@ -203,7 +198,7 @@ namespace SummitReports.Objects
             {
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)
@@ -245,7 +240,7 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
                 foreach (DataRow uwRelItem in reldata.Rows)
                 {
                     sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("MODEL"));
-                    workbook.SetSheetName(workbook.NumberOfSheets - 1, uwRelItem["RelationshipName"].ToString());
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, uwRelItem["RelationshipName"].ToString().AsSheetName());
 
                     GenerateSheetForRelationship(this.sheet, uwRelItem, relCFDataTable);
                 }
