@@ -12,9 +12,9 @@
     <PackageTags>Summit Reports</PackageTags>
     <PackageReleaseNotes>This report libary can generated UW Relationship Cash Flow</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
-    <Version>1.0.25.0</Version>
+    <AssemblyVersion>1.0.28.0</AssemblyVersion>
+    <FileVersion>1.0.28.0</FileVersion>
+    <Version>1.0.28.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Reports\BAReport\BAReport.xlsx" />
@@ -40,6 +40,6 @@
 	<EmbeddedResource Include="Reports\UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SummitReport.Infrastructure\SummitReport.Infrastructure.csproj" />
+    <ProjectReference Include="..\SummitReports.Infrastructure\SummitReports.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
