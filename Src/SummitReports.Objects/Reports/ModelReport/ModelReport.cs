@@ -5,10 +5,11 @@ using System.Reflection;
 using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using System.Data;
+using SummitReport.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class ModelReport : SummitReportBaseObject
+    public class ModelReport : SummitReportBaseObject, IGenericReport
     {
         public ModelReport() : base(@"ModelReport\ModelReportTemplate.xlsx")
         {
@@ -20,13 +21,13 @@ namespace SummitReports.Objects
         /// </summary>
         /// <param name="uwRelationshipId"></param>
         /// <returns>Name of the file generated</returns>
-        public async Task<string> GenerateAsync(int BidPoolId)
+        public async Task<string> GenerateAsync(int Id)
         {
             try
             {
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportSettings).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)
@@ -46,13 +47,13 @@ namespace SummitReports.Objects
                 var boldStyle = new XSSFNPoiStyle() { FillPattern = FillPattern.SolidForeground, FillForegroundColor = IndexedColors.PaleBlue.AsXSSFColor(), IsBold = true, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Left, WrapText = true };
 
                 string sSQL2 = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_Relationship] WHERE BidPoolId=@p0;SELECT GETDATE() as ThisDate, 'SQL LITERAL' as ThisString;";
-                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, BidPoolId);
+                var retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL2, Id);
                 DataTable firstResultSet = retDataSet.Tables[0];
                 foreach (DataRow row in firstResultSet.Rows)
                 {
 
                     sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("MODEL"));
-                    workbook.SetSheetName(workbook.NumberOfSheets - 1, row["RelationshipName"].ToString());
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, row["RelationshipName"].ToString().AsSheetName());
 
                     sheet.SetCellValue(0, "D", "@DR1->");
                     sheet.SetCellValue(0, "E", row, "uwRelationshipId").SetCellStyle(standardStyle);

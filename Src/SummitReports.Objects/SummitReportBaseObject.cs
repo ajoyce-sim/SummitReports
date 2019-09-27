@@ -1,10 +1,12 @@
 ﻿using NPOI.SS.UserModel;
 using System.IO;
 using NPOI.XSSF.UserModel;
+using SummitReport.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class SummitReportBaseObject
+
+    public abstract class SummitReportBaseObject : ISummitReport
     {
         public SummitReportBaseObject(string ExcelTemplatePathAndFileName)
         {
