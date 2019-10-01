@@ -54,8 +54,6 @@ namespace SummitReports.Tests
         }
 
         [Fact]
-
-
         public async void BAReportTestOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
@@ -63,7 +61,14 @@ namespace SummitReports.Tests
             var generatedFIleName1 = await rpt.BidPoolGenerateAsync(10);
             var generatedFIleName2 = await rpt.RelationshipGenerateAsync(51);
         }
-    }
 
+        [Fact]
+        public async void UWRelationshipMasterReportOk()
+        {
+            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var rpt = new UWRelationshipMasterReport();
+            var generatedFileName = await rpt.GenerateAsync(51);
+        }       
+    }
 }
 
