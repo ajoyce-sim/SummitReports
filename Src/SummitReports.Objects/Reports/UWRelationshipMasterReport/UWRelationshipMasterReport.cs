@@ -17,13 +17,13 @@ namespace SummitReports.Objects
 
         }
 
-        void DoMerge(List<string> _sourceFiles, string targetFileName)
+        IWorkbook DoMerge(Dictionary<string, string> _sourceFiles, string targetFileName)
         {
             XSSFWorkbook target = new XSSFWorkbook();
 
             bool b = false;
             int xlsFileIdx = 0;
-            foreach (string strFile in _sourceFiles)
+            foreach (string strFile in _sourceFiles.Keys)
             {
                 xlsFileIdx++;
                 XSSFWorkbook sourceXls = new XSSFWorkbook(strFile);
@@ -31,13 +31,10 @@ namespace SummitReports.Objects
                 for (int i = 0; i < sourceXls.NumberOfSheets; i++)
                 {
                     XSSFSheet sheet1 = sourceXls.GetSheetAt(i) as XSSFSheet;
-                    sheet1.CopyTo(target, sheet1.SheetName+"_" + xlsFileIdx.ToString(), true, false);
+                    sheet1.CopyTo(target, _sourceFiles[strFile], true, true);
                 }
             }
-            using (FileStream fs = new FileStream(targetFileName, FileMode.Create, FileAccess.Write))
-            {
-                target.Write(fs);
-            }
+            return target;
         }
 
         /// <summary>
@@ -53,12 +50,16 @@ namespace SummitReports.Objects
             var loanReport = new LoansReportPres();
             var reReport = new REReportPres();
             var baReport = new BAReport();
-            var reportList = new List<string>();
-            reportList.Add(await cfReport.RelationshipGenerateAsync(Id));
-            reportList.Add(await loanReport.RelationshipGenerateAsync(Id));
-            reportList.Add(await reReport.RelationshipGenerateAsync(Id));
-            reportList.Add(await baReport.RelationshipGenerateAsync(Id));
-            DoMerge(reportList, this.GeneratedFileName); 
+            var reportListWithName = new Dictionary<string, string>();
+            reportListWithName.Add(await cfReport.RelationshipGenerateAsync(Id), "Cash Flow");
+            reportListWithName.Add(await loanReport.RelationshipGenerateAsync(Id), "Loan");
+            reportListWithName.Add(await reReport.RelationshipGenerateAsync(Id), "Real Estate");
+            reportListWithName.Add(await baReport.RelationshipGenerateAsync(Id), "Business Assets");
+            var target = DoMerge(reportListWithName, this.GeneratedFileName);
+            using (FileStream fs = new FileStream(this.GeneratedFileName, FileMode.Create, FileAccess.Write))
+            {
+                ((XSSFWorkbook)target).Write(fs);
+            }
             return this.GeneratedFileName;
         }
     }
