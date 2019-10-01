@@ -15,7 +15,51 @@ namespace SummitReports.Objects
         {
 
         }
-        
+
+        public async Task<DataSet> FetchDataAsync(int BidPoolId, int uwRelationshipId)
+        {
+            return await FetchDataAsync(BidPoolId, uwRelationshipId, null);
+        }
+
+        /// <summary>
+        /// This works around a strange NPOI copy quirk that copies the formulas incorrect.  This gives the option to force this object to write directly to the sheet
+        /// </summary>
+        /// <param name="BidPoolId"></param>
+        /// <param name="uwRelationshipId"></param>
+        /// <param name="sheet"></param>
+        /// <returns></returns>
+        public async Task<DataSet> FetchDataAsync(int BidPoolId, int uwRelationshipId, ISheet sheet)
+        {
+            DataSet retDataSet = null;
+            if ((BidPoolId == 0) && (uwRelationshipId > 0))
+            {
+                string sSQL = @"SET ANSI_WARNINGS OFF; 
+SELECT * FROM [UW].[vw_Relationship] WHERE uwRelationshipId = @p0;
+SELECT cf.* FROM [UW].[vw_RelationshipCashFlow] cf 
+WHERE uwRelationshipId = @p0 ORDER BY CashFlowDate;";
+                retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL, uwRelationshipId);
+
+            }
+            else if ((BidPoolId > 0) && (uwRelationshipId == 0))
+            {
+                string sSQL = @"SET ANSI_WARNINGS OFF; 
+SELECT * FROM [UW].[vw_Relationship] WHERE BidPoolId = @p0 ORDER BY RelationshipName;
+SELECT cf.* FROM [UW].[vw_RelationshipCashFlow] cf 
+INNER JOIN [UW].[vw_Relationship] r
+ON cf.uwRelationshipId = r.uwRelationshipId
+WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
+                retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL, BidPoolId);
+            }
+            else
+            {
+                throw new Exception(string.Format("Invalid call to GenerateAsync is invalid.  We need one or the other to be greater than zero.  BidPoolId={0} uwRelationshipId={1}", BidPoolId, uwRelationshipId));
+            }
+            if (sheet!=null)
+            {
+                GenerateSheetForRelationship(sheet, retDataSet.Tables[0].Rows[0], retDataSet.Tables[1]);
+            }
+            return retDataSet;
+        }
         private bool GenerateSheetForRelationship(ISheet sheet, DataRow uwRelItem, DataTable _relCFdata)
         {
             try
@@ -211,29 +255,7 @@ namespace SummitReports.Objects
                 }
                 this.workbook.ClearStyleCache();
 
-                DataSet retDataSet = null;
-                if ((BidPoolId==0) && (uwRelationshipId>0))
-                {
-                    string sSQL = @"SET ANSI_WARNINGS OFF; 
-SELECT * FROM [UW].[vw_Relationship] WHERE uwRelationshipId = @p0;
-SELECT cf.* FROM [UW].[vw_RelationshipCashFlow] cf 
-WHERE uwRelationshipId = @p0 ORDER BY CashFlowDate;";
-                    retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL, uwRelationshipId);
-
-                }
-                else if ((BidPoolId > 0) && (uwRelationshipId == 0))
-                {
-                    string sSQL = @"SET ANSI_WARNINGS OFF; 
-SELECT * FROM [UW].[vw_Relationship] WHERE BidPoolId = @p0 ORDER BY RelationshipName;
-SELECT cf.* FROM [UW].[vw_RelationshipCashFlow] cf 
-INNER JOIN [UW].[vw_Relationship] r
-ON cf.uwRelationshipId = r.uwRelationshipId
-WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
-                    retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL, BidPoolId);
-                } else
-                {
-                    throw new Exception(string.Format("Invalid call to GenerateAsync is invalid.  We need one or the other to be greater than zero.  BidPoolId={0} uwRelationshipId={1}", BidPoolId, uwRelationshipId));
-                }
+                DataSet retDataSet = await FetchDataAsync(BidPoolId, uwRelationshipId);
                 var reldata = retDataSet.Tables[0];
                 var relCFDataTable = retDataSet.Tables[1];
 
