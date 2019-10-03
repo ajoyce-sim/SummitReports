@@ -133,7 +133,16 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
                 foreach (var cashFlowItem in relCFdata)
                 {
                     sheet.CreateRow(17 + iRow);
-
+                    if ((int)cashFlowItem["MatyFlag"] == 1)
+                    {
+                        cashFlowCellStyle.IsBold = true;
+                        cashFlowCellStyle.BackgroundColor = IndexedColors.Red.AsXSSFColor(); 
+                    }
+                    else
+                    {
+                        cashFlowCellStyle.IsBold = false;
+                        cashFlowCellStyle.BackgroundColor = IndexedColors.White.AsXSSFColor();
+                    }
                     sheet.SetCellValue(17 + iRow, "A", cashFlowItem, "CashFlowDate").SetCellFormat("mmm-yy");
                     sheet.SetCellValue(17 + iRow, "B", (double)(iRow + 1)).SetCellFormat("0"); ;
                     sheet.SetCellValue(17 + iRow, "C", cashFlowItem, "Principal").SetCellStyle(cashFlowCellStyle);

@@ -11,8 +11,8 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var uwrelcf = new UWRelationshipCashFlow();
-            var generatedFileNameRel = await uwrelcf.RelationshipGenerateAsync(50);
-            var generatedFileNameBidPool = await uwrelcf.BidPoolGenerateAsync(10);
+            var generatedFileNameRel = await uwrelcf.RelationshipGenerateAsync(13);
+            //var generatedFileNameBidPool = await uwrelcf.BidPoolGenerateAsync(10);
         }
 
         [Fact]
@@ -67,7 +67,9 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = new UWRelationshipMasterReport();
-            var generatedFileName = await rpt.GenerateAsync(51);
+            var generatedFileName1 = await rpt.GenerateAsync(50);
+            var generatedFileName2 = await rpt.GenerateAsync(51);
+            var generatedFileName3 = await rpt.GenerateAsync(52);
         }       
     }
 }
