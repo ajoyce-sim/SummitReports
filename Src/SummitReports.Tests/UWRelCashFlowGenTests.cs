@@ -11,8 +11,8 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var uwrelcf = new UWRelationshipCashFlow();
-            var generatedFileNameRel = await uwrelcf.RelationshipGenerateAsync(13);
-            //var generatedFileNameBidPool = await uwrelcf.BidPoolGenerateAsync(10);
+            var generatedFileNameRel = await uwrelcf.RelationshipGenerateAsync(16);
+            var generatedFileNameBidPool = await uwrelcf.BidPoolGenerateAsync(3);
         }
 
         [Fact]

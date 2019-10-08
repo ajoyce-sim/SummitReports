@@ -136,12 +136,14 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
                     if ((int)cashFlowItem["MatyFlag"] == 1)
                     {
                         cashFlowCellStyle.IsBold = true;
-                        cashFlowCellStyle.BackgroundColor = IndexedColors.Red.AsXSSFColor(); 
+                        cashFlowCellStyle.FillPattern = FillPattern.SolidForeground;
+                        cashFlowCellStyle.FillForegroundColor = IndexedColors.LightYellow.AsXSSFColor();
                     }
                     else
                     {
                         cashFlowCellStyle.IsBold = false;
-                        cashFlowCellStyle.BackgroundColor = IndexedColors.White.AsXSSFColor();
+                        cashFlowCellStyle.FillPattern = FillPattern.SolidForeground;
+                        cashFlowCellStyle.FillForegroundColor = IndexedColors.White.AsXSSFColor();
                     }
                     sheet.SetCellValue(17 + iRow, "A", cashFlowItem, "CashFlowDate").SetCellFormat("mmm-yy");
                     sheet.SetCellValue(17 + iRow, "B", (double)(iRow + 1)).SetCellFormat("0"); ;
