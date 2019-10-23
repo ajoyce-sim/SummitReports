@@ -13,6 +13,45 @@ namespace SummitReports.Objects
 {
     public static class NPoiExtentions
     {
+        /// <summary>
+        /// Protects SetSheetName with a try to we can figure out what name it died on.  It will also append the id at the end if the string becomes too large for the end of the sheet name (31 characters)
+        /// </summary>
+        /// <param name="workbook"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        public static IWorkbook SetSheetName(this IWorkbook workbook, int sheetNumber,string sheetName, int id)
+        {
+            try
+            {
+                workbook.SetSheetName(sheetNumber, sheetName.AsSheetName(id));
+                return workbook;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(string.Format("Could not rename sheet at {0} with name {0}. ", sheetNumber, sheetName), ex);
+            }
+        }
+
+        /// <summary>
+        /// Protects CreateSheet with a try to we can figure out what name it died on.  It will also append the id at the end if the string becomes too large for the end of the sheet name (31 characters)
+        /// </summary>
+        /// <param name="workbook"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        public static ISheet CreateSheet(this IWorkbook workbook, string sheetName, int id)
+        {
+            try
+            {
+                return workbook.CreateSheet(sheetName.AsSheetName(id));
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(string.Format("Could not create sheet with name {0}. ", sheetName), ex);
+            }
+        }
         public static void SetCellValue(this ICell cell, decimal value)
         {
             cell.SetCellValue((decimal)value);

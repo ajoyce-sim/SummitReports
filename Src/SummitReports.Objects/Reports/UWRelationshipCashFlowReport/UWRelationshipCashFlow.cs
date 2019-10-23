@@ -64,6 +64,10 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
         {
             try
             {
+
+                var RelationshipName = uwRelItem["RelationshipName"];
+                var uwRelationshipId = (int)uwRelItem["uwRelationshipId"];
+
                 sheet.SetCellValue(1, "B", uwRelItem, "uwRelationshipId");
                 sheet.SetCellValue(1, "E", uwRelItem, "Underwriter");
                 sheet.SetCellValue(1, "G", uwRelItem, "PrimaryCollateralType");
@@ -188,9 +192,15 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
 
                 iRow = iRow + 17 + 3; //line up past the model last row and the last row of all the generated rows
 
+                sheet = workbook.CreateSheet(("Notes " + RelationshipName), uwRelationshipId);
+
                 var titleStyle = new XSSFNPoiStyle() {  IsBold = true, FontHeightInPoints = 30  };
                 var notesStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, HorizontalAlignment= HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, WrapText = true };
 
+                for (int i = 0; i < 26; i++)
+                {
+                    sheet.SetCellValue(iRow, i, "");
+                }
                 sheet.SetCellValue(iRow, "A", "Asset Notes").SetCellStyle(titleStyle);
                 iRow++;
                 this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
@@ -273,7 +283,7 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
                 foreach (DataRow uwRelItem in reldata.Rows)
                 {
                     sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("MODEL"));
-                    workbook.SetSheetName(workbook.NumberOfSheets - 1, uwRelItem["RelationshipName"].ToString().AsSheetName());
+                    workbook.SetSheetName(workbook.NumberOfSheets - 1, uwRelItem["RelationshipName"].ToString(), (int)uwRelItem["uwRelationshipId"]);
 
                     GenerateSheetForRelationship(this.sheet, uwRelItem, relCFDataTable);
                 }
