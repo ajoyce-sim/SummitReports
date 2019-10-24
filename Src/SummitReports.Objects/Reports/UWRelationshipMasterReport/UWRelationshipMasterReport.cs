@@ -46,10 +46,10 @@ namespace SummitReports.Objects
         {
 
             this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
-            var cfReport = new UWRelationshipCashFlow();
-            var loanReport = new LoansReportPres();
-            var reReport = new REReportPres();
-            var baReport = new BAReport();
+            var cfReport = new UWRelationshipCashFlow() { ReportWorkPath = this.reportWorkPath };
+            var loanReport = new LoansReportPres() { ReportWorkPath = this.reportWorkPath };
+            var reReport = new REReportPres() { ReportWorkPath = this.reportWorkPath };
+            var baReport = new BAReport() { ReportWorkPath = this.reportWorkPath };
             var reportListWithName = new Dictionary<string, string>();
             reportListWithName.Add(await cfReport.RelationshipGenerateAsync(Id), "Cash Flow");
             reportListWithName.Add(await loanReport.RelationshipGenerateAsync(Id), "Loan");
