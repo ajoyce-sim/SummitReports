@@ -47,12 +47,12 @@ namespace SummitReports.Objects
 
             this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
             var cfReport = new UWRelationshipCashFlow() { ReportWorkPath = this.reportWorkPath };
-            var loanReport = new LoansReportPres() { ReportWorkPath = this.reportWorkPath };
+            //var loanReport = new LoansReportPres() { ReportWorkPath = this.reportWorkPath };
             var reReport = new REReportPres() { ReportWorkPath = this.reportWorkPath };
             var baReport = new BAReport() { ReportWorkPath = this.reportWorkPath };
             var reportListWithName = new Dictionary<string, string>();
             reportListWithName.Add(await cfReport.RelationshipGenerateAsync(Id), "Cash Flow");
-            reportListWithName.Add(await loanReport.RelationshipGenerateAsync(Id), "Loan");
+            //reportListWithName.Add(await loanReport.RelationshipGenerateAsync(Id), "Loan");
             reportListWithName.Add(await reReport.RelationshipGenerateAsync(Id), "Real Estate");
             reportListWithName.Add(await baReport.RelationshipGenerateAsync(Id), "Business Assets");
             var target = DoMerge(reportListWithName, this.GeneratedFileName);

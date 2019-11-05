@@ -2,6 +2,7 @@
 using System.IO;
 using NPOI.XSSF.UserModel;
 using SummitReports.Infrastructure;
+using NPOI.SS.Converter;
 
 namespace SummitReports.Objects
 {
@@ -53,5 +54,25 @@ namespace SummitReports.Objects
         {
         }
 
+        protected bool SaveAsHtml(string inputXlsFile)
+        {
+
+            ExcelToHtmlConverter excelToHtmlConverter = new ExcelToHtmlConverter();
+
+            // Set output parameters
+            excelToHtmlConverter.OutputColumnHeaders = false;
+            excelToHtmlConverter.OutputHiddenColumns = false;
+            excelToHtmlConverter.OutputHiddenRows = false;
+            excelToHtmlConverter.OutputLeadingSpacesAsNonBreaking = false;
+            excelToHtmlConverter.OutputRowNumbers = false;
+            excelToHtmlConverter.UseDivsToSpan = false;
+
+            // Process the Excel file
+            excelToHtmlConverter.ProcessWorkbook(workbook);
+
+            // Output the HTML file
+            excelToHtmlConverter.Document.Save(Path.ChangeExtension(inputXlsFile, "html"));
+            return true;
+        }
     }
 }
