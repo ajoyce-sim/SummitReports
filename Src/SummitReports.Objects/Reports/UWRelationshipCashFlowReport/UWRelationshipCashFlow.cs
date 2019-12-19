@@ -191,29 +191,31 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
                 var titleStyle = new XSSFNPoiStyle() {  IsBold = true, FontHeightInPoints = 30  };
                 var notesStyle = new XSSFNPoiStyle() { Border = CellBorder.All, BorderStyle = BorderStyle.Thin, HorizontalAlignment= HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, WrapText = true };
 
-                sheet.SetCellValue(iRow, "A", "Asset Notes").SetCellStyle(titleStyle);
-                iRow++;
-                this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
-                sheet.SetCellValue(iRow, "A", uwRelItem, "AssetNotes").SetCellStyle(notesStyle);
-                iRow = iRow + 22;
+                //  Remove Notes from Report (12/18/2019)
+                // The are going to add a Special Notes doc to eacj relationship.
+                //sheet.SetCellValue(iRow, "A", "Asset Notes").SetCellStyle(titleStyle);
+                //iRow++;
+                //this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
+                //sheet.SetCellValue(iRow, "A", uwRelItem, "AssetNotes").SetCellStyle(notesStyle);
+                //iRow = iRow + 22;
 
-                sheet.SetCellValue(iRow, "A", "Collateral Valuation Notes").SetCellStyle(titleStyle);
-                iRow++;
-                this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
-                sheet.SetCellValue(iRow, "A", uwRelItem, "CollateralValuationNotes").SetCellStyle(notesStyle);
-                iRow = iRow + 22;
+                //sheet.SetCellValue(iRow, "A", "Collateral Valuation Notes").SetCellStyle(titleStyle);
+                //iRow++;
+                //this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
+                //sheet.SetCellValue(iRow, "A", uwRelItem, "CollateralValuationNotes").SetCellStyle(notesStyle);
+                //iRow = iRow + 22;
 
-                sheet.SetCellValue(iRow, "A", "Title UCC Notes").SetCellStyle(titleStyle);
-                iRow++;
-                this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
-                sheet.SetCellValue(iRow, "A", uwRelItem, "TitleUCCNotes").SetCellStyle(notesStyle);
-                iRow = iRow + 22;
+                //sheet.SetCellValue(iRow, "A", "Title UCC Notes").SetCellStyle(titleStyle);
+                //iRow++;
+                //this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
+                //sheet.SetCellValue(iRow, "A", uwRelItem, "TitleUCCNotes").SetCellStyle(notesStyle);
+                //iRow = iRow + 22;
 
-                sheet.SetCellValue(iRow, "A", "Environmental Notes").SetCellStyle(titleStyle);
-                iRow++;
-                this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
-                sheet.SetCellValue(iRow, "A", uwRelItem, "EnvironmentalNotes").SetCellStyle(notesStyle);
-                iRow = iRow + 22;
+                //sheet.SetCellValue(iRow, "A", "Environmental Notes").SetCellStyle(titleStyle);
+                //iRow++;
+                //this.sheet.MergeCellsRange(iRow, iRow + 21, "A", "Z").SetRangeStyle(this.sheet, notesStyle);
+                //sheet.SetCellValue(iRow, "A", uwRelItem, "EnvironmentalNotes").SetCellStyle(notesStyle);
+                //iRow = iRow + 22;
             }
             catch (Exception)
             {
