@@ -105,7 +105,7 @@ namespace SummitReports.Objects
                     {
                         Month = sheet.GetCellValue(i, "B", 0),
                         ItemDate = sheet.GetCellValue(i, "C", DateTime.MinValue),
-                        Factor = sheet.GetCellValue(i, "D", 0),
+                        Factor = sheet.GetCellValue(i, "D", 0.0m),
                         BeginningBalance = sheet.GetCellValue(i, "E", 0),
                         Payment = sheet.GetCellValue(i, "F", 0),
                         Principal = sheet.GetCellValue(i, "G", 0),

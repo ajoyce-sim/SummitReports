@@ -77,15 +77,15 @@ namespace SummitReports.Tests
             rpt.CurrentlyPastDueFeesAndAdvances = 0;
             rpt.PerDiemInterest = 0;
             rpt.SIMFeesAndAdvances = 0;
-            rpt.StartDate = DateTime.Parse("3/1/2019");
+            rpt.StartDate = DateTime.Parse("5/1/2019");
             rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days365;
             rpt.PrincipalCalculation = ePrincipalCalculation.Amortization;
             rpt.FixedPaymentAmount = 55000;
-            rpt.InterestRate = 0.059m;
+            rpt.InterestRate = 0.259m;
             rpt.AmortizationTermYears = 10;
             rpt.BalloonPaymentMonths = 48;
             var ret = rpt.Calculate();
-            rpt.SaveToFile(@"C:\Temp\AmortTest.xlsx");
+            //rpt.SaveToFile(@"C:\Temp\AmortTest.xlsx");
         }
 
     }
