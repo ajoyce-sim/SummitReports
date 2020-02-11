@@ -1,6 +1,7 @@
 using Xunit;
 using SummitReports.Infrastructure;
 using SummitReports.Objects;
+using System;
 
 namespace SummitReports.Tests
 {
@@ -66,6 +67,27 @@ namespace SummitReports.Tests
             var generatedFIleName2 = await rpt.RelationshipGenerateAsync(12);
         }
 
+        [Fact]
+        public void AmortCalcTestOk()
+        {
+            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var rpt = ReportLoader.Instance.CreateInstance<IAmortizationCalculatorReport>("AmortizationCalculator");
+            rpt.UPB = 10000000;
+            rpt.CurrentlyPastDueInterest = 0;
+            rpt.CurrentlyPastDueFeesAndAdvances = 0;
+            rpt.PerDiemInterest = 0;
+            rpt.SIMFeesAndAdvances = 0;
+            rpt.StartDate = DateTime.Parse("3/1/2019");
+            rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days365;
+            rpt.PrincipalCalculation = ePrincipalCalculation.Amortization;
+            rpt.FixedPaymentAmount = 55000;
+            rpt.InterestRate = 0.059m;
+            rpt.AmortizationTermYears = 10;
+            rpt.BalloonPaymentMonths = 48;
+            var ret = rpt.Calculate();
+            rpt.SaveToFile(@"C:\Temp\AmortTest.xlsx");
+        }
+
     }
- }
+}
 
