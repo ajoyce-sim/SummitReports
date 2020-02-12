@@ -12,9 +12,9 @@
     <PackageTags>Summit Reports</PackageTags>
     <PackageReleaseNotes>This report libary can generated UW Relationship Cash Flow</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.35.0</AssemblyVersion>
-    <FileVersion>1.0.35.0</FileVersion>
-    <Version>1.0.35.0</Version>
+    <AssemblyVersion>1.0.38.0</AssemblyVersion>
+    <FileVersion>1.0.38.0</FileVersion>
+    <Version>1.0.38.0</Version>
     <AssemblyVersion>1.0.33.0</AssemblyVersion>
     <FileVersion>1.0.33.0</FileVersion>
     <Version>1.0.33.0</Version>
@@ -23,6 +23,7 @@
     <Version>1.0.37.0</Version>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Reports\AmortizationCalculator\AmortizationCalculator_20200211.xlsx" />
     <None Remove="Reports\BAReport\BAReport.xlsx" />
     <None Remove="Reports\DeanSheetPresentation\DeanSheet-Presentation.xlsx" />
     <None Remove="Reports\DeanSheetPresentation\DeanSheetPresentationTemplate.xlsx" />
@@ -38,6 +39,7 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
+	<EmbeddedResource Include="Reports\AmortizationCalculator\AmortizationCalculator_20200211.xlsx" />
 	<EmbeddedResource Include="Reports\BAReport\BAReport.xlsx" />
 	<EmbeddedResource Include="Reports\DeanSheetPresentation\DeanSheet-Presentation.xlsx" />
 	<EmbeddedResource Include="Reports\LoansReportPres\LoansReportPres.xlsx" />

@@ -546,7 +546,70 @@ namespace SummitReports.Objects
             {
                 throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
             }
+        }
 
+        public static DateTime GetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, DateTime defaultValue)
+        {
+            try
+            {
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
+                var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
+                if (cell == null) return defaultValue;
+                return cell.DateCellValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+            }
+        }
+
+
+        public static DateTime GetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, DateTime defaultValue)
+        {
+            try
+            {
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
+                int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
+                var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
+                if (cell == null) return defaultValue;
+                return cell.DateCellValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+            }
+        }
+
+        public static int GetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, int defaultValue)
+        {
+            try
+            {
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
+                var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
+                if (cell == null) return defaultValue;
+                return (int)cell.NumericCellValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+            }
+        }
+
+
+        public static int GetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, int defaultValue)
+        {
+            try
+            {
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
+                int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
+                var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
+                if (cell == null) return defaultValue;
+                return (int)cell.NumericCellValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+            }
         }
     }
 }
