@@ -30,8 +30,8 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = new DeanSheetPresentation();
-            var generatedFIleNameA = await rpt.GenerateAsync(31);
-            var generatedFIleNameB = await rpt.GenerateAsync(46);
+            var generatedFIleNameA = await rpt.GenerateAsync(2);
+            var generatedFIleNameB = await rpt.GenerateAsync(31);
         }
 
         [Fact]
