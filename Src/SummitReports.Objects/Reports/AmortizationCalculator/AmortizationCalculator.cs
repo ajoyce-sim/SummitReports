@@ -100,17 +100,17 @@ namespace SummitReports.Objects
                 var row = 23;
                 for (int i = row; i < 500; i++)
                 {
-                    var endBalance = sheet.GetCellValue(i, "J", 0);
+                    var endBalance = sheet.GetCellValue(i, "J", 0.0m);
                     result.Add(new AmortizationScheduleItem()
                     {
                         Month = sheet.GetCellValue(i, "B", 0),
                         ItemDate = sheet.GetCellValue(i, "C", DateTime.MinValue),
                         Factor = sheet.GetCellValue(i, "D", 0.0m),
-                        BeginningBalance = sheet.GetCellValue(i, "E", 0),
-                        Payment = sheet.GetCellValue(i, "F", 0),
-                        Principal = sheet.GetCellValue(i, "G", 0),
-                        Interest = sheet.GetCellValue(i, "H", 0),
-                        Balloon = sheet.GetCellValue(i, "I", 0),
+                        BeginningBalance = sheet.GetCellValue(i, "E", 0.0m),
+                        Payment = sheet.GetCellValue(i, "F", 0.0m),
+                        Principal = sheet.GetCellValue(i, "G", 0.0m),
+                        Interest = sheet.GetCellValue(i, "H", 0.0m),
+                        Balloon = sheet.GetCellValue(i, "I", 0.0m),
                         EndBalance = endBalance
                     }) ;
                     if (endBalance == 0) break;
