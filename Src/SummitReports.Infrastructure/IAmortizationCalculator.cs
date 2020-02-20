@@ -40,7 +40,7 @@ namespace SummitReports.Infrastructure
         DateTime StartDate { get; set; }
         eInterestCalculationMethodology InterestCalculationMethodology { get; set; }
         ePrincipalCalculation PrincipalCalculation { get; set; }
-        int FixedPaymentAmount { get; set; }
+        decimal FixedPaymentAmount { get; set; }
         decimal InterestRate { get; set; }
         int AmortizationTermYears { get; set; }
         int BalloonPaymentMonths { get; set; }

@@ -38,7 +38,7 @@ namespace SummitReports.Objects
         public DateTime StartDate { get; set; } = DateTime.Now;
         public eInterestCalculationMethodology InterestCalculationMethodology { get; set; } = eInterestCalculationMethodology.Days365;
         public ePrincipalCalculation PrincipalCalculation { get; set; } = ePrincipalCalculation.Amortization;
-        public int FixedPaymentAmount { get; set; } = 0;
+        public decimal FixedPaymentAmount { get; set; } = 0.0m;
         public decimal InterestRate { get; set; } = 0.0m;
         public int AmortizationTermYears { get; set; } = 0;
         public int BalloonPaymentMonths { get; set; } = 0;
