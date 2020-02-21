@@ -12,9 +12,9 @@
     <PackageTags>Summit Reports</PackageTags>
     <PackageReleaseNotes>This report libary can generated UW Relationship Cash Flow</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.42.0</AssemblyVersion>
-    <FileVersion>1.0.42.0</FileVersion>
-    <Version>1.0.42.0</Version>
+    <AssemblyVersion>1.0.43.0</AssemblyVersion>
+    <FileVersion>1.0.43.0</FileVersion>
+    <Version>1.0.43.0</Version>
     <AssemblyVersion>1.0.33.0</AssemblyVersion>
     <FileVersion>1.0.33.0</FileVersion>
     <Version>1.0.33.0</Version>
