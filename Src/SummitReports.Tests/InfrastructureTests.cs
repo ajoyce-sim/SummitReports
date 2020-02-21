@@ -79,7 +79,7 @@ namespace SummitReports.Tests
             rpt.SIMFeesAndAdvances = 0;
             rpt.StartDate = DateTime.Parse("5/1/2019");
             rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days365;
-            rpt.PrincipalCalculation = ePrincipalCalculation.Amortization;
+            rpt.PrincipalCalculation = ePrincipalCalculation.FixedPayment;
             rpt.FixedPaymentAmount = 55000;
             rpt.InterestRate = 0.259m;
             rpt.AmortizationTermYears = 10;
