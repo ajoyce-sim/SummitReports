@@ -142,12 +142,29 @@ namespace SummitReports.Objects
                     sheet.SetCellValue(iRow + 5, "E", row, "GuarantorTxt").SetCellStyle(LnCellStyle);
                     LnCellStyle.CellFormat = "mm/dd/yyy";
                     sheet.SetCellValue(iRow + 5, "F", row, "OriginationDate").SetCellStyle(LnCellStyle);
-                    sheet.SetCellValue(iRow + 5, "G", row, "MaturityDate").SetCellStyle(LnCellStyle);
+                    if ((row["MaturityDateText"] == System.DBNull.Value) || ((string)row["MaturityDateText"] == ""))
+                    {
+                        LnCellStyle.CellFormat = "mm/dd/yyy";
+                        sheet.SetCellValue(iRow + 5, "G", row, "MaturityDate").SetCellStyle(LnCellStyle);
+                    }
+                    else 
+                    {
+                        LnCellStyle.CellFormat = "@";
+                        sheet.SetCellValue(iRow + 5, "G", row, "MaturityDatetext").SetCellStyle(LnCellStyle);
+                    }
                     LnCellStyle.CellFormat = "#,##0.00";
                     sheet.SetCellValue(iRow + 5, "H", row, "OriginalUPB").SetCellStyle(LnCellStyle);
                     sheet.SetCellValue(iRow + 5, "I", row, "UPB").SetCellStyle(LnCellStyle);
-                    LnCellStyle.CellFormat = "0.0%";
-                    sheet.SetCellValue(iRow + 5, "J", row, "InterestRate").SetCellStyle(LnCellStyle);
+                    if((row["InterestRateText"] == System.DBNull.Value) || ((string)row["InterestRateText"] == ""))
+                    {
+                        LnCellStyle.CellFormat = "0.0%";
+                        sheet.SetCellValue(iRow + 5, "J", row, "InterestRate").SetCellStyle(LnCellStyle);
+                    }
+                    else 
+                    {
+                        LnCellStyle.CellFormat = "@";
+                        sheet.SetCellValue(iRow + 5, "J", row, "InterestRateText").SetCellStyle(LnCellStyle);
+                    }
                     LnCellStyle.CellFormat = "#,###";
                     sheet.SetCellValue(iRow + 5, "K", row, "SIMValueLoan").SetCellStyle(LnCellStyle);
                     

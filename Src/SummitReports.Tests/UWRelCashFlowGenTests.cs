@@ -50,8 +50,8 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = new LoansReportPres();
-            var generatedFIleName1 = await rpt.BidPoolGenerateAsync(10);
-            var generatedFIleName2 = await rpt.RelationshipGenerateAsync(51);
+            var generatedFIleName1 = await rpt.BidPoolGenerateAsync(2);
+            var generatedFIleName2 = await rpt.RelationshipGenerateAsync(12);
         }
 
         [Fact]
