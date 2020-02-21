@@ -85,8 +85,8 @@ namespace SummitReports.Objects
                 sheet.SetCellValue(6, "E", this, "PerDiemInterest");
                 sheet.SetCellValue(7, "E", this, "SIMFeesAndAdvances");
                 sheet.SetCellValue(10, "E", this, "StartDate");
-                sheet.SetCellValue(12, "E", this.InterestCalculationMethodology.ToString().Replace("Days", "Days "));
-                sheet.SetCellValue(14, "E", this.PrincipalCalculation.ToString());
+                sheet.SetCellValue(12, "E", this.InterestCalculationMethodology.ToDescriptionString());
+                sheet.SetCellValue(14, "E", this.PrincipalCalculation.ToDescriptionString());
                 sheet.SetCellValue(16, "E", this, "FixedPaymentAmount");
                 sheet.SetCellValue(18, "E", this, "InterestRate");
                 sheet.SetCellValue(19, "E", this, "AmortizationTermYears");
