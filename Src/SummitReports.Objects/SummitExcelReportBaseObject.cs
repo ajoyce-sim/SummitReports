@@ -7,9 +7,9 @@ using NPOI.SS.Converter;
 namespace SummitReports.Objects
 {
 
-    public abstract class SummitReportBaseObject : ISummitReport
+    public abstract class SummitExcelReportBaseObject : ISummitReport
     {
-        public SummitReportBaseObject(string ExcelTemplatePathAndFileName)
+        public SummitExcelReportBaseObject(string ExcelTemplatePathAndFileName)
         {
             this.ReportWorkPath = System.IO.Path.GetTempPath();
             var arr = ExcelTemplatePathAndFileName.Split('\\');

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace SummitReports.Objects
 {
-    public class UWRelationshipMasterReport : SummitReportBaseObject, IGenericReport
+    public class UWRelationshipMasterReport : SummitExcelReportBaseObject, IGenericReport
     {
         public UWRelationshipMasterReport() : base(@"UWRelationshipMasterReport\UWRelationshipMasterReport.xlsx")
         {
