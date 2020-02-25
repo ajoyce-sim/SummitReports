@@ -8,7 +8,7 @@ using SummitReports.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class DeanSheetPresentation : SummitReportBaseObject, IBidPoolReport
+    public class DeanSheetPresentation : SummitExcelReportBaseObject, IBidPoolReport
     {
         public DeanSheetPresentation() : base(@"DeanSheetPresentation\DeanSheet-Presentation.xlsx")
         {
@@ -26,7 +26,7 @@ namespace SummitReports.Objects
             {
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)
