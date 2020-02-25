@@ -9,7 +9,7 @@ using SummitReports.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class UWRelationshipCashFlow : SummitReportBaseObject, IBidPoolRelationshipReport
+    public class UWRelationshipCashFlow : SummitExcelReportBaseObject, IBidPoolRelationshipReport
     {
         public UWRelationshipCashFlow() : base(@"UWRelationshipCashFlowReport\UW-RCF-Reports.xlsx")
         {
@@ -255,7 +255,7 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
             {
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)

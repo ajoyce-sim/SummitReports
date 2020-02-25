@@ -28,7 +28,7 @@ namespace SummitReports.Objects
 
     }
 
-    public class AmortizationCalculator : SummitReportBaseObject, IAmortizationCalculatorReport
+    public class AmortizationCalculator : SummitExcelReportBaseObject, IAmortizationCalculatorReport
     {
         public decimal UPB { get; set; } = 0.0m;
         public decimal CurrentlyPastDueInterest { get; set; } = 0.0m;
@@ -54,7 +54,7 @@ namespace SummitReports.Objects
             {
                 this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
 
-                var assembly = typeof(SummitReports.Objects.SummitReportBaseObject).GetTypeInfo().Assembly;
+                var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
                 var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
                 FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
                 for (int i = 0; i < stream.Length; i++)
