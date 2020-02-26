@@ -45,6 +45,20 @@ namespace SummitReports.Objects
             return underscore.Replace(s.ToLower(), m => m.Groups[0].ToString().ToUpper().Replace("_", ""));
         }
 
+        public static string Value(this DataRow row, string ColumnName)
+        {
+            return row.Value(ColumnName, "");
+        }
+        
+        public static string Value(this DataRow row, string ColumnName, string Format)
+        {
+            if (row == null) return "";
+            if (!row.Table.Columns.Contains(ColumnName)) return string.Format("Column name '{0}' does not exist in table", ColumnName);
+            if (row[ColumnName] == DBNull.Value) return "";
+            if (row[ColumnName] == null) return "";
+            if (!string.IsNullOrEmpty(Format)) return string.Format("{0:" + Format + "}", row[ColumnName]);
+            return row[ColumnName].ToString();
+        }
         public static string AsSheetName(this string name, int id1, int id2)
         {
             var id = 0;

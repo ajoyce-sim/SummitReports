@@ -22,6 +22,15 @@ namespace SummitReports.Tests
             var rpt = new DocSample();
             var genFileName = await rpt.GenerateAsync(6670);
         }
+
+        [Fact]
+        public async void RECommentDocOk()
+        {
+
+            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var rpt = new RECommentDoc();
+            var genFileName = await rpt.GenerateAsync(727);
+        }
     }
 }
 
