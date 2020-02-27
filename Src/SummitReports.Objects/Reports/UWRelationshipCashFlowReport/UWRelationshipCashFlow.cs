@@ -253,20 +253,7 @@ WHERE r.BidPoolId = @p0 ORDER BY r.RelationshipName, CashFlowDate;";
         {
             try
             {
-                this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
-
-                var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
-                var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
-                FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
-                for (int i = 0; i < stream.Length; i++)
-                    fileStream.WriteByte((byte)stream.ReadByte());
-                fileStream.Close();
-                using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
-                {
-                    this.workbook = new XSSFWorkbook(file);
-                    this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex("MODEL"));
-                }
-                this.workbook.ClearStyleCache();
+                if (!this.ReloadTemplate("MODEL")) throw new Exception("Template could not be loaded :(");
 
                 DataSet retDataSet = await FetchDataAsync(BidPoolId, uwRelationshipId);
                 var reldata = retDataSet.Tables[0];

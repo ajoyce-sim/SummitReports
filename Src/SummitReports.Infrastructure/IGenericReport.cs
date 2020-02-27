@@ -8,6 +8,7 @@ namespace SummitReports.Infrastructure
     public interface IGenericReport : ISummitReport
     {
         Task<string> GenerateAsync(int Id);
+
     }
 
     public interface ISummitReport
@@ -15,5 +16,6 @@ namespace SummitReports.Infrastructure
         string ReportWorkPath { get; set; }
         void Clear();
         bool SaveToFile(string FileName);
+        bool ReloadTemplate(string initial = "");
     }
 }

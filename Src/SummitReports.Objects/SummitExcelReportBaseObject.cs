@@ -3,6 +3,8 @@ using System.IO;
 using NPOI.XSSF.UserModel;
 using SummitReports.Infrastructure;
 using NPOI.SS.Converter;
+using System.Reflection;
+using System;
 
 namespace SummitReports.Objects
 {
@@ -25,6 +27,8 @@ namespace SummitReports.Objects
         protected string excelTemplateFileName = "";
         protected string excelTemplatePath = "";
         protected string reportWorkPath;
+        protected int iSheet = 1;
+
         public string ReportWorkPath
         {
             get
@@ -53,6 +57,53 @@ namespace SummitReports.Objects
         public void Clear()
         {
         }
+        /// <summary>
+        /// Reload from the excel template found in the resources
+        /// </summary>
+        /// <param name="initial">The First sheet to set sheet object to,it will use the name, but if start with an @ and a number, it will use that directly as the sheet index.  if this is empty it will assume the first sheet</param>
+        /// <returns></returns>
+        public virtual bool ReloadTemplate(string initial = "")
+        {
+            this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
+
+            var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
+            var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
+            try
+            {
+                FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
+                for (int i = 0; i < stream.Length; i++)
+                    fileStream.WriteByte((byte)stream.ReadByte());
+                fileStream.Close();
+            }
+            catch (Exception ex2)
+            {
+                throw new Exception(string.Format("Error while reading template {0}.{1} as an embedded resource, are you sure its spelled right and the you set the file Build Action as 'Embedded Resource'?", excelTemplatePath, excelTemplateFileName), ex2);
+            }
+
+            using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
+            {
+                this.workbook = new XSSFWorkbook(file);
+                if ((initial.StartsWith("@")) && (int.TryParse(initial.Replace("@", ""), out int initialIndex)))
+                {
+                    this.iSheet = initialIndex;
+                    this.sheet = this.workbook.GetSheetAt(initialIndex);
+
+                }
+                else if (initial.Length>0)
+                {
+                    this.iSheet = this.workbook.GetSheetIndex(initial);
+                    this.sheet = this.workbook.GetSheetAt(this.iSheet);
+                }
+                else
+                {
+                    this.iSheet = 0;
+                    this.sheet = this.workbook.GetSheetAt(this.iSheet);
+                }
+            }
+            this.workbook.ClearStyleCache();
+            return true;
+        }
+
 
         protected bool SaveAsHtml(string inputXlsFile)
         {

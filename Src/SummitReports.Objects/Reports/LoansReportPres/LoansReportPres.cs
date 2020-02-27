@@ -46,26 +46,8 @@ namespace SummitReports.Objects
         {
             try
             {
-                // Initialize the workbook
-
-                this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
-
-                var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
-                var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
-                FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
-                for (int i = 0; i < stream.Length; i++)
-                    fileStream.WriteByte((byte)stream.ReadByte());
-                fileStream.Close();
-                var iSheet = 1;
-                using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
-                {
-                    this.workbook = new XSSFWorkbook(file);
-                    this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
-                }
-                this.workbook.ClearStyleCache();
-
-
-
+                var ModelSheetName = "1";
+                if (!this.ReloadTemplate(ModelSheetName)) throw new Exception("Template could not be loaded :(");
                 // Generate a Sheet for each relationship.  If uwRelationshipId >0 then onl one sheet is needed.
 
                 string sSQL1 = "";
@@ -85,12 +67,12 @@ namespace SummitReports.Objects
 
                 for (int x = 2; x < iTabCnt + 1; x++)
                 {
-                    sheet = workbook.CloneSheet(this.workbook.GetSheetIndex("1"));
+                    sheet = workbook.CloneSheet(this.workbook.GetSheetIndex(ModelSheetName));
                     workbook.SetSheetName(workbook.NumberOfSheets - 1, x.ToString().AsSheetName());
                 }
                 
                 // Return to sheet "1"
-                this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(iSheet.ToString()));
+                this.sheet = this.workbook.GetSheetAt(this.workbook.GetSheetIndex(ModelSheetName));
 
                 // Get Dataset for report using ADO;  If uwRelationshipId <> 0 use uwRelationshipId else use BidPoolId
 

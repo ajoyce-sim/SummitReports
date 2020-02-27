@@ -4,6 +4,8 @@ using NPOI.XSSF.UserModel;
 using SummitReports.Infrastructure;
 using NPOI.SS.Converter;
 using NPOI.XWPF.UserModel;
+using System.Reflection;
+using System;
 
 namespace SummitReports.Objects
 {
@@ -52,6 +54,29 @@ namespace SummitReports.Objects
         public void Clear()
         {
         }
-      
+
+        public virtual bool ReloadTemplate(string initial = "")
+        {
+            this.GeneratedFileName = this.reportWorkPath + wordTemplateFileName.Replace(".docx", "-" + Guid.NewGuid().ToString() + ".docx");
+
+            var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
+            var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", wordTemplatePath, wordTemplateFileName));
+            try
+            {
+                FileStream fileStream = new FileStream(this.GeneratedFileName, FileMode.CreateNew);
+                for (int i = 0; i < stream.Length; i++)
+                    fileStream.WriteByte((byte)stream.ReadByte());
+                fileStream.Close();
+            }
+            catch (Exception ex2)
+            {
+                throw new Exception(string.Format("Error while reading template {0}.{1} as an embedded resource, are you sure its spelled right and the you set the file Build Action as 'Embedded Resource'?", wordTemplatePath, wordTemplateFileName), ex2);
+            }
+            using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
+            {
+                this.document = new XWPFDocument(file);
+            }
+            return true;
+        }
     }
 }

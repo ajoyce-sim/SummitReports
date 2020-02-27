@@ -11,7 +11,7 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = new PDFSample();
-            var genFileName = await rpt.GenerateAsync(6669);
+            var genFileName = await rpt.GenerateAsync(5);
         }
 
         [Fact]
