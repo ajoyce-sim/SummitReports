@@ -9,7 +9,7 @@ using SummitReports.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class RECommentDoc : SummitWordReportBaseObject
+    public class RECommentDoc : SummitWordReportBaseObject, IGenericReport
     {
         public RECommentDoc() : base(@"RECommentDoc\RECommentDoc.docx")
         {
@@ -20,9 +20,9 @@ namespace SummitReports.Objects
         /// <summary>
         /// This will generate a Report with the Real Estate Comment.
         /// </summary>
-        /// <param name="uwRECollateralId">Real Estate Collateral Id</param>
+        /// <param name="id">uwRECollateralId</param>
         /// <returns>Name of the file generated</returns>
-        public async Task<string> GenerateAsync(int uwRECollateralId)
+        public async Task<string> GenerateAsync(int id)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace SummitReports.Objects
                 // Initialize Data Set
                 sSQL = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRE] WHERE [uwRECollateralId] = @p0;";
 
-                retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL, uwRECollateralId);
+                retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL, id);
                 if ((retDataSet.Tables.Count == 1) && (retDataSet.Tables[0].Rows.Count == 1))
                 {
                     var data = retDataSet.Tables[0].Rows[0];
