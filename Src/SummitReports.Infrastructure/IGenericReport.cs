@@ -14,6 +14,8 @@ namespace SummitReports.Infrastructure
     public interface ISummitReport
     {
         string ReportWorkPath { get; set; }
+        string TemplateFileName { get; set; }
+        string GeneratedFileName { get; set; }
         void Clear();
         bool SaveToFile(string FileName);
         bool ReloadTemplate(string initial = "");

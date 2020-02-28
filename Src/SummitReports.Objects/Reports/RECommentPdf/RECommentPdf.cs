@@ -9,47 +9,42 @@ using SummitReports.Infrastructure;
 
 namespace SummitReports.Objects
 {
-    public class RECommentDoc : SummitWordReportBaseObject, IGenericReport
+    public class RECommentPdf : SummitPDFReportBaseObject, IGenericReport
     {
-        public RECommentDoc() : base(@"RECommentDoc\RECommentDoc.docx")
+        public RECommentPdf() : base(@"RECommentPdf\RECommentPdf.html")
         {
-
         }
-
-
         /// <summary>
         /// This will generate a Report with the Real Estate Comment.
         /// </summary>
-        /// <param name="id">uwRECollateralId</param>
+        /// <param name="uwRECollateralId">uwRECollateralId</param>
         /// <returns>Name of the file generated</returns>
-        public async Task<string> GenerateAsync(int id)
+        public async Task<string> GenerateAsync(int uwRECollateralId)
         {
             try
             {
-                if (!this.ReloadTemplate()) throw new Exception("Template could not be loaded :(");
+                if (!ReloadTemplate()) throw new Exception("Template could not be loaded :(");
 
                 string sSQL = "";
                 DataSet retDataSet = null;
 
-                // Initialize Data Set
                 sSQL = @"SET ANSI_WARNINGS OFF; SELECT * FROM [UW].[vw_CollateralRE] WHERE [uwRECollateralId] = @p0;";
 
-                retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL, id);
+                retDataSet = await MarsDb.QueryAsDataSetAsync(sSQL, uwRECollateralId);
                 if ((retDataSet.Tables.Count == 1) && (retDataSet.Tables[0].Rows.Count == 1))
                 {
                     var data = retDataSet.Tables[0].Rows[0];
-                    document.ReplaceFieldValue(data, "RptHeader");
-                    document.ReplaceFieldValue(data, "CollateralFullAddress");
-                    document.ReplaceFieldValue(data, "SIMValue", "C0");
-                    document.ReplaceFieldValue(data, "Comments");
-                    SaveToFile(this.GeneratedFileName);
-                    return this.GeneratedFileName;
+                    Document.ReplaceFieldValue(data, "RptHeader");
+                    Document.ReplaceFieldValue(data, "OneLineAddress");
+                    Document.ReplaceFieldValue(data, "SIMValue", "C0");
+                    Document.ReplaceFieldValue(data, "Comments");
+                    SaveToFile(GeneratedFileName);
+                    return GeneratedFileName;
                 }
                 return "No records found";
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

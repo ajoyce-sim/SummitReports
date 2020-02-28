@@ -22,8 +22,10 @@ namespace SummitReports.Objects
         protected ISheet sheet;
 
         protected int rowIndex = 0;
-        public string TemplateFileName = "";
-        public string GeneratedFileName = "";
+        protected string templateFileName = "";
+        protected string generatedFileName = "";
+        public string TemplateFileName { get => templateFileName; set => templateFileName = value; }
+        public string GeneratedFileName { get => generatedFileName; set => generatedFileName = value; }
         protected string excelTemplateFileName = "";
         protected string excelTemplatePath = "";
         protected string reportWorkPath;
@@ -65,8 +67,10 @@ namespace SummitReports.Objects
         public virtual bool ReloadTemplate(string initial = "")
         {
             this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
+            var lst= System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
 
             var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
+            var lst2 = assembly.GetManifestResourceNames();
             var stream = assembly.GetManifestResourceStream(string.Format("SummitReports.Objects.Reports.{0}.{1}", excelTemplatePath, excelTemplateFileName));
             try
             {

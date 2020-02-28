@@ -11,7 +11,7 @@ namespace SummitReports.Objects
 {
     public class DocSample : SummitWordReportBaseObject
     {
-        public DocSample() : base(@"DocSample\DocSample.docx")
+        public DocSample() : base(@"Samples\DocSample\DocSample.docx")
         {
 
         }
@@ -27,13 +27,7 @@ namespace SummitReports.Objects
             try
             {
                 if (!this.ReloadTemplate()) throw new Exception("Template could not be loaded :(");
-                foreach (var p in this.document.Paragraphs)
-                {
-                    if (p.ParagraphText.Contains("%ENTERTEXT%"))
-                    {
-                        p.ReplaceText("%ENTERTEXT%", string.Format("Id Passed was {0}", id));
-                    }
-                }
+                Document.ReplaceFieldValue("ENTERTEXT", string.Format("Id Passed was {0}", id));
                 SaveToFile(this.GeneratedFileName);
                 return this.GeneratedFileName;
             }

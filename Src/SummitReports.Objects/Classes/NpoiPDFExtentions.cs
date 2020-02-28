@@ -1,6 +1,5 @@
 ﻿using FastMember;
 using HtmlAgilityPack;
-using NPOI.XWPF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,25 +9,32 @@ using System.Text;
 
 namespace SummitReports.Objects
 {
-    public static class NPoiPdfExtentions
+
+
+    public class NPoiPdfDocument : ISummitDocument
     {
-        public static HtmlDocument ReplaceFieldValue(this HtmlDocument document, DataRow data, string ColumnName)
+        private HtmlDocument document;
+        public HtmlDocument Document { get => document; set => document = value; }
+        public NPoiPdfDocument(HtmlDocument _document)
         {
-            return document.ReplaceFieldValue(data, ColumnName, "");
+            document = _document;
         }
-        public static HtmlDocument ReplaceFieldValue(this HtmlDocument document, DataRow data, string ColumnName, string Format)
+
+        public void ReplaceFieldValue(DataRow data, string ColumnName)
+        {
+            ReplaceFieldValue(data, ColumnName, "");
+        }
+        public void ReplaceFieldValue(DataRow data, string ColumnName, string Format)
         {
             var variableName = string.Format("%{0}%", ColumnName);
             var columnValue = data.Value(ColumnName, Format);
             document.Text = document.Text.Replace(variableName, columnValue.Replace("\r", "").Replace("\n", "<br/>"));
-            return document;
         }
-        public static HtmlDocument ReplaceFieldValue(this HtmlDocument document, string ColumnName, string valueToSet)
+        public void ReplaceFieldValue(string ColumnName, string valueToSet)
         {
             var variableName = string.Format("%{0}%", ColumnName);
             var columnValue = valueToSet;
             document.Text = document.Text.Replace(variableName, columnValue.Replace("\r", "").Replace("\n", "<br/>"));
-            return document;
         }
     }
 }

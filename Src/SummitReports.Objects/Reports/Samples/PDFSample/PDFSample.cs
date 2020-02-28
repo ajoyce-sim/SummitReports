@@ -11,7 +11,7 @@ namespace SummitReports.Objects
 {
     public class PDFSample : SummitPDFReportBaseObject
     {
-        public PDFSample() : base(@"PDFSample\PDFSample.html")
+        public PDFSample() : base(@"Samples\PDFSample\PDFSample.html")
         {
 
         }
@@ -37,10 +37,10 @@ namespace SummitReports.Objects
                 if ((retDataSet.Tables.Count == 1) && (retDataSet.Tables[0].Rows.Count == 1))
                 {
                     var data = retDataSet.Tables[0].Rows[0];
-                    document.ReplaceFieldValue(data, "RptHeader");
-                    document.ReplaceFieldValue(data, "CollateralFullAddress");
-                    document.ReplaceFieldValue(data, "SIMValue", "C0");
-                    document.ReplaceFieldValue(data, "Comments");
+                    Document.ReplaceFieldValue(data, "RptHeader");
+                    Document.ReplaceFieldValue(data, "CollateralFullAddress");
+                    Document.ReplaceFieldValue(data, "SIMValue", "C0");
+                    Document.ReplaceFieldValue(data, "Comments");
                     SaveToFile(this.GeneratedFileName);
                     return this.GeneratedFileName;
                 }

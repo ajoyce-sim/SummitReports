@@ -24,12 +24,12 @@ namespace SummitReports.Tests
         }
 
         [Fact]
-        public async void RECommentDocOk()
+        public async void RECommentPdfOk()
         {
 
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
-            var rpt = new RECommentDoc();
-            var genFileName = await rpt.GenerateAsync(727);
+            var rpt2 = new RECommentPdf();
+            var genFileName2 = await rpt2.GenerateAsync(727);
         }
     }
 }
