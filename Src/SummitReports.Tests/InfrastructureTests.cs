@@ -68,6 +68,15 @@ namespace SummitReports.Tests
         }
 
         [Fact]
+        public async void RECommentPdfTestOk()
+        {
+            SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var rpt = ReportLoader.Instance.CreateInstance<IGenericReport>("RECommentPdf");
+            var generatedFIleName1 = await rpt.GenerateAsync(5);
+        }
+
+
+        [Fact]
         public void AmortCalcTestOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
