@@ -143,9 +143,11 @@ Task("NuGet-Pack")
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.deps.json", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.dll", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/SummitReports.Objects.pdb", Target = "lib/netstandard2.0" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/netstandard2.0/Select.Html.dep", Target = "lib/netstandard2.0" },
 
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.dll", Target = "lib/net461" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/SummitReports.Objects.pdb", Target = "lib/net461" },
+			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Objects/bin/Release/net461/Select.Html.dep", Target = "lib/net461" },
 
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Infrastructure/bin/Release/netstandard2.0/SummitReports.Infrastructure.deps.json", Target = "lib/netstandard2.0" },
 			new NuSpecContent { Source = thisDir + @"Src/SummitReports.Infrastructure/bin/Release/netstandard2.0/SummitReports.Infrastructure.dll", Target = "lib/netstandard2.0" },
