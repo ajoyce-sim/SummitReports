@@ -75,24 +75,34 @@ namespace SummitReports.Tests
             var generatedFIleName1 = await rpt.GenerateAsync(5);
         }
 
+        [Fact]
+        public async void SummitInvestorBookPdfTestOk()
+        {
+            var rpt = ReportLoader.Instance.CreateInstance<IGenericReport>("SummitInvestorBookPdf");
+            //SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            SummitReportSettings.Instance.ConnectionString = "data source=.;initial catalog=MARS;user=simsa;password=D3n^3r#$";
+            var generatedFIleName1 = await rpt.GenerateAsync(5);
+        }
+
 
         [Fact]
         public void AmortCalcTestOk()
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = ReportLoader.Instance.CreateInstance<IAmortizationCalculatorReport>("AmortizationCalculator");
-            rpt.UPB = 10000000;
-            rpt.CurrentlyPastDueInterest = 0;
-            rpt.CurrentlyPastDueFeesAndAdvances = 0;
-            rpt.PerDiemInterest = 0;
-            rpt.SIMFeesAndAdvances = 0;
-            rpt.StartDate = DateTime.Parse("5/1/2019");
+            rpt.UPB = 1999999;
+            rpt.InterestRate = 0.055m;
             rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days365;
-            rpt.PrincipalCalculation = ePrincipalCalculation.FixedPayment;
-            rpt.FixedPaymentAmount = 55000;
-            rpt.InterestRate = 0.259m;
             rpt.AmortizationTermYears = 10;
-            rpt.BalloonPaymentMonths = 48;
+            rpt.BalloonPaymentMonths = 120;
+            rpt.StartDate = DateTime.Parse("1/1/2019");
+            rpt.FirstPaymentMonth = 1;
+            rpt.PaymentFrequency = 12;
+            rpt.IsInterestOnly = true;
+            rpt.PIKStartMonth = 0;
+            rpt.PIKEndMonth = 0;
+            rpt.IsFixedPayment = false;
+            rpt.FixedPaymentAmount = 55000;
             var ret = rpt.Calculate();
             //rpt.SaveToFile(@"C:\Temp\AmortTest.xlsx");
         }
