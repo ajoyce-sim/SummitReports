@@ -23,10 +23,6 @@ namespace SummitReports.Objects
         public decimal Balloon { get; set; }
         public decimal EndBalance { get; set; }
     }
-    public class AmortizationScheduleResult : List<IAmortizationScheduleItem>
-    {
-
-    }
 
     public class AmortizationCalculator : SummitExcelReportBaseObject, IAmortizationCalculatorReport
     {
@@ -57,7 +53,7 @@ namespace SummitReports.Objects
         {
         }
 
-        List<IAmortizationScheduleItem> IAmortizationCalculatorReport.Calculate()
+        AmortizationScheduleResult IAmortizationCalculatorReport.Calculate()
         {
             try
             {
@@ -97,7 +93,7 @@ namespace SummitReports.Objects
                 else
                     HSSFFormulaEvaluator.EvaluateAllFormulaCells(workbook);
                 var result = new AmortizationScheduleResult();
-                SaveToFile(@"C:\Temp\out_.xls");
+
                 var row = 35;
                 for (int i = row; i < 500; i++)
                 {
@@ -105,7 +101,7 @@ namespace SummitReports.Objects
                     var payment = sheet.GetCellValue(i, "F", 0.0m);
                     if (payment>0)
                     {
-                        result.Add(new AmortizationScheduleItem()
+                        result.AmortizationScheduleItemList.Add(new AmortizationScheduleItem()
                         {
                             Month = sheet.GetCellValue(i, "C", 0),
                             ItemDate = sheet.GetCellValue(i, "D", DateTime.MinValue),
@@ -120,7 +116,8 @@ namespace SummitReports.Objects
                     }
                     if (endBalance == 0) break;
                 }
-
+                result.GeneratedFileName = Path.GetFileName(this.GeneratedFileName) ;
+                SaveToFile( this.GeneratedFileName );
                 return result;
             }
             catch (Exception)

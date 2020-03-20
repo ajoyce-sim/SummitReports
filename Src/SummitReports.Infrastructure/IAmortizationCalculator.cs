@@ -40,6 +40,12 @@ namespace SummitReports.Infrastructure
         decimal EndBalance { get; set; }
 
     }
+    public class AmortizationScheduleResult
+    {
+        public string GeneratedFileName { get; set; } = "";
+        public List<IAmortizationScheduleItem> AmortizationScheduleItemList { get; set; } = new List<IAmortizationScheduleItem>();
+    }
+
     public interface IAmortizationCalculatorReport : ISummitReport
     {
         decimal UPB { get; set; }
@@ -56,6 +62,6 @@ namespace SummitReports.Infrastructure
         int InterestOnlyEnd { get; set; }
         bool IsFixedPayment { get; set; }
         decimal FixedPaymentAmount { get; set; }
-        List<IAmortizationScheduleItem> Calculate();
+        AmortizationScheduleResult Calculate();
     }
 }
