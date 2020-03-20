@@ -90,19 +90,19 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = ReportLoader.Instance.CreateInstance<IAmortizationCalculatorReport>("AmortizationCalculator");
-            rpt.UPB = 1999999;
-            rpt.InterestRate = 0.055m;
-            rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days365;
-            rpt.AmortizationTermYears = 10;
+            rpt.UPB = 2000000;
+            rpt.InterestRate = 0.07m;
+            rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days360;
+            rpt.AmortizationTermYears = 22;
             rpt.BalloonPaymentMonths = 120;
-            rpt.StartDate = DateTime.Parse("1/1/2019");
+            rpt.StartDate = DateTime.Parse("3/1/2020");
             rpt.FirstPaymentMonth = 1;
             rpt.PaymentFrequency = 12;
-            rpt.IsInterestOnly = true;
+            rpt.IsInterestOnly = false;
             rpt.PIKStartMonth = 0;
             rpt.PIKEndMonth = 0;
             rpt.IsFixedPayment = false;
-            rpt.FixedPaymentAmount = 55000;
+            rpt.FixedPaymentAmount = 160000;
             var ret = rpt.Calculate();
             //rpt.SaveToFile(@"C:\Temp\AmortTest.xlsx");
         }

@@ -53,7 +53,7 @@ namespace SummitReports.Objects
         public int InterestOnlyEnd { get; set; } = 0;
         public bool IsFixedPayment { get; set; } = false;
 
-        public AmortizationCalculator() : base(@"AmortizationCalculator\AmortizationCalculator_20200211.xlsx")
+        public AmortizationCalculator() : base(@"AmortizationCalculator\AmortizationCalculator_20200320.xlsx")
         {
         }
 
@@ -61,7 +61,7 @@ namespace SummitReports.Objects
         {
             try
             {
-                if (!this.ReloadTemplate("Amortization Calculator")) throw new Exception("Template could not be loaded :(");
+                if (!this.ReloadTemplate("Sheet1")) throw new Exception("Template could not be loaded :(");
 
                 List<string> Errors = new List<string>();
                 if (this.UPB <= 0) Errors.Add(string.Format("UPB value of {0} is invalid.", this.UPB));
@@ -85,11 +85,11 @@ namespace SummitReports.Objects
                 sheet.SetCellValue(17, "F", this, "StartDate");
                 sheet.SetCellValue(18, "F", this, "FirstPaymentMonth");
                 sheet.SetCellValue(21, "F", this, "PaymentFrequency");
-                sheet.SetCellValue(22, "F", this.IsInterestOnly );
+                sheet.SetCellValue(22, "F", ( this.IsInterestOnly ? "Y" : "N") );
                 sheet.SetCellValue(23, "F", this, "PIKStartMonth");
                 sheet.SetCellValue(24, "F", this, "PIKEndMonth");
                 sheet.SetCellValue(25, "F", this, "InterestOnlyEnd");
-                sheet.SetCellValue(26, "F", this.IsFixedPayment );
+                sheet.SetCellValue(26, "F", (this.IsFixedPayment ? "Y" : "N"));
                 sheet.SetCellValue(27, "F", this, "FixedPaymentAmount");
 
                 if (workbook is XSSFWorkbook)
@@ -97,22 +97,27 @@ namespace SummitReports.Objects
                 else
                     HSSFFormulaEvaluator.EvaluateAllFormulaCells(workbook);
                 var result = new AmortizationScheduleResult();
+                SaveToFile(@"C:\Temp\out_.xls");
                 var row = 35;
                 for (int i = row; i < 500; i++)
                 {
                     var endBalance = sheet.GetCellValue(i, "J", 0.0m);
-                    result.Add(new AmortizationScheduleItem()
+                    var payment = sheet.GetCellValue(i, "F", 0.0m);
+                    if (payment>0)
                     {
-                        Month = sheet.GetCellValue(i, "C", 0),
-                        ItemDate = sheet.GetCellValue(i, "D", DateTime.MinValue),
-                        Factor = 0,
-                        BeginningBalance = sheet.GetCellValue(i, "E", 0.0m),
-                        Payment = sheet.GetCellValue(i, "F", 0.0m),
-                        Principal = sheet.GetCellValue(i, "G", 0.0m),
-                        Interest = sheet.GetCellValue(i, "H", 0.0m),
-                        Balloon = sheet.GetCellValue(i, "I", 0.0m),
-                        EndBalance = endBalance
-                    }) ;
+                        result.Add(new AmortizationScheduleItem()
+                        {
+                            Month = sheet.GetCellValue(i, "C", 0),
+                            ItemDate = sheet.GetCellValue(i, "D", DateTime.MinValue),
+                            Factor = 0,
+                            BeginningBalance = sheet.GetCellValue(i, "E", 0.0m),
+                            Payment = payment,
+                            Principal = sheet.GetCellValue(i, "G", 0.0m),
+                            Interest = sheet.GetCellValue(i, "H", 0.0m),
+                            Balloon = sheet.GetCellValue(i, "I", 0.0m),
+                            EndBalance = endBalance
+                        });
+                    }
                     if (endBalance == 0) break;
                 }
 
