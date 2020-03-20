@@ -116,7 +116,7 @@ namespace SummitReports.Objects
                     }
                     if (endBalance == 0) break;
                 }
-                result.GeneratedFileName = Path.GetFileName(this.GeneratedFileName) ;
+                result.GeneratedFileName = this.GeneratedFileName;
                 SaveToFile( this.GeneratedFileName );
                 return result;
             }

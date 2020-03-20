@@ -90,6 +90,7 @@ namespace SummitReports.Tests
         {
             SummitReportSettings.Instance.ConnectionString = "data source=summittest.database.windows.net;initial catalog=MARS;user=simsa;password=D3n^3r#$";
             var rpt = ReportLoader.Instance.CreateInstance<IAmortizationCalculatorReport>("AmortizationCalculator");
+            rpt.ReportWorkPath = @"C:\temp\";
             rpt.UPB = 2000000;
             rpt.InterestRate = 0.07m;
             rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days360;
