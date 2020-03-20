@@ -66,13 +66,13 @@ namespace SummitReports.Objects
                 List<string> Errors = new List<string>();
                 if (this.UPB <= 0) Errors.Add(string.Format("UPB value of {0} is invalid.", this.UPB));
                 if (this.StartDate.Equals(DateTime.MinValue)) Errors.Add(string.Format("StartDate value is not set."));
-                if (this.FixedPaymentAmount <= 0) Errors.Add(string.Format("FixedPaymentAmount value of {0} is invalid.", this.FixedPaymentAmount));
-                if (this.InterestRate <= 0) Errors.Add(string.Format("InterestRate value of {0} is invalid.", this.InterestRate));
+                if (this.FixedPaymentAmount < 0) Errors.Add(string.Format("FixedPaymentAmount value of {0} is invalid.", this.FixedPaymentAmount));
+                if (this.InterestRate < 0) Errors.Add(string.Format("InterestRate value of {0} is invalid.", this.InterestRate));
                 if (this.AmortizationTermYears <= 0) Errors.Add(string.Format("AmortizationTermYears value of {0} is invalid.", this.AmortizationTermYears));
                 if (this.BalloonPaymentMonths < 0) Errors.Add(string.Format("BalloonPaymentMonths value of {0} is invalid.", this.BalloonPaymentMonths));
-                if (this.InterestOnlyEnd > 0) Errors.Add(string.Format("InterestOnlyEnd value of {0} is invalid.", this.InterestOnlyEnd));
-                if (this.PIKEndMonth > 0) Errors.Add(string.Format("PIKEndMonth value of {0} is invalid.", this.PIKEndMonth));
-                if (this.PIKStartMonth > 0) Errors.Add(string.Format("PIKStartMonth value of {0} is invalid.", this.PIKStartMonth));
+                if (this.InterestOnlyEnd < 0) Errors.Add(string.Format("InterestOnlyEnd value of {0} is invalid.", this.InterestOnlyEnd));
+                if (this.PIKEndMonth < 0) Errors.Add(string.Format("PIKEndMonth value of {0} is invalid.", this.PIKEndMonth));
+                if (this.PIKStartMonth < 0) Errors.Add(string.Format("PIKStartMonth value of {0} is invalid.", this.PIKStartMonth));
                 if (Errors.Count>0)
                 {
                     throw new ArgumentException(string.Join(" ", Errors.ToArray()));
