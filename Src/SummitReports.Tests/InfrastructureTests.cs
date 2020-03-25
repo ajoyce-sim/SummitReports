@@ -93,7 +93,7 @@ namespace SummitReports.Tests
             rpt.ReportWorkPath = @"C:\temp\";
             rpt.UPB = 2000000;
             rpt.InterestRate = 0.07m;
-            rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days360;
+            rpt.InterestCalculationMethodology = eInterestCalculationMethodology.Days365;
             rpt.AmortizationTermYears = 22;
             rpt.BalloonPaymentMonths = 120;
             rpt.StartDate = DateTime.Parse("3/1/2020");
