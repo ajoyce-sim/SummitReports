@@ -75,7 +75,8 @@ namespace SummitReports.Objects
                 }
                 sheet.SetCellValue(10, "F", this, "UPB");
                 sheet.SetCellValue(12, "F", this, "InterestRate");
-                sheet.SetCellValue(14, "F", this.InterestCalculationMethodology.ToDescriptionString());
+                if (double.TryParse(this.InterestCalculationMethodology.ToDescriptionString(), out var dblInterestCalculationMethodology))
+                    sheet.SetCellValue(14, "F", dblInterestCalculationMethodology);
                 sheet.SetCellValue(15, "F", this, "AmortizationTermYears");
                 sheet.SetCellValue(16, "F", this, "BalloonPaymentMonths");
                 sheet.SetCellValue(17, "F", this, "StartDate");
@@ -99,8 +100,8 @@ namespace SummitReports.Objects
                 {
                     var endBalance = sheet.GetCellValue(i, "J", 0.0m);
                     var payment = sheet.GetCellValue(i, "F", 0.0m);
-                    if (payment>0)
-                    {
+                    //if (payment>0)
+                    //{
                         result.AmortizationScheduleItemList.Add(new AmortizationScheduleItem()
                         {
                             Month = sheet.GetCellValue(i, "C", 0),
@@ -113,7 +114,7 @@ namespace SummitReports.Objects
                             Balloon = sheet.GetCellValue(i, "I", 0.0m),
                             EndBalance = endBalance
                         });
-                    }
+                    //}
                     if (endBalance == 0) break;
                 }
                 result.GeneratedFileName = this.GeneratedFileName;
