@@ -14,22 +14,22 @@
     <repository type="github" url="https://github.com/ajoyce-sim/SummitReports" />
     <dependencies>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="FastMember" version="1.5.0" exclude="Build,Analyzers" />
-        <dependency id="NPOI" version="2.4.1" exclude="Build,Analyzers" />
-        <dependency id="Newtonsoft.Json" version="12.0.2" exclude="Build,Analyzers" />
-        <dependency id="System.Data.SqlClient" version="4.6.1" exclude="Build,Analyzers" />
-        <dependency id="HtmlAgilityPack" version="1.11.21" exclude="Build,Analyzers" />
-        <dependency id="IronPdf" version="2020.1.0" exclude="Build,Analyzers" />
-		<dependency id="Select.HtmlToPdf.NetCore" version="19.2.0" exclude="Build,Analyzers" />		
+		<dependency id="FastMember" version="1.5.0" exclude="Build,Analyzers" />
+		<dependency id="HtmlAgilityPack" version="1.11.23" exclude="Build,Analyzers" />
+		<dependency id="IronPdf" version="2020.1.0" exclude="Build,Analyzers" />
+		<dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+		<dependency id="NPOI" version="2.5.0" exclude="Build,Analyzers" />
+		<dependency id="Select.HtmlToPdf.NetCore" version="19.2.0" exclude="Build,Analyzers" />
+		<dependency id="System.Data.SqlClient" version="4.8.1" exclude="Build,Analyzers" />	  
       </group> 
       <group targetFramework=".NETFramework4.6.1">
 		<dependency id="FastMember" version="1.5.0" exclude="Build,Analyzers" />
-		<dependency id="HtmlAgilityPack" version="1.11.21" exclude="Build,Analyzers" />
+		<dependency id="HtmlAgilityPack" version="1.11.23" exclude="Build,Analyzers" />
 		<dependency id="IronPdf" version="2020.1.0" exclude="Build,Analyzers" />
 		<dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
-		<dependency id="NPOI" version="2.4.1" exclude="Build,Analyzers" />
+		<dependency id="NPOI" version="2.5.0" exclude="Build,Analyzers" />
 		<dependency id="Select.HtmlToPdf.NetCore" version="19.2.0" exclude="Build,Analyzers" />
-		<dependency id="System.Data.SqlClient" version="4.8.1" exclude="Build,Analyzers" />
+		<dependency id="System.Data.SqlClient" version="4.8.1" exclude="Build,Analyzers" />	  
       </group>	  
     </dependencies>
   </metadata>
@@ -44,3 +44,4 @@
     <file src="lib\net461\Select.Html.dep" target="lib\net461\Select.Html.dep" />
   </files>
 </package>
+

@@ -487,6 +487,21 @@ namespace SummitReports.Objects
             }
         }
 
+        public static string GetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, string defaultValue)
+        {
+            try
+            {
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
+                var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
+                if (cell == null) return defaultValue;
+                return cell.StringCellValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+            }
+        }
+
         public static double GetCellValue(this ISheet worksheet, int rowPosition, int columnPosition, double defaultValue)
         {
             try
@@ -517,6 +532,21 @@ namespace SummitReports.Objects
             }
         }
 
+        public static string GetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, string defaultValue)
+        {
+            try
+            {
+                var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
+                int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
+                var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
+                if (cell == null) return defaultValue;
+                return cell.StringCellValue;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+            }
+        }
         public static double GetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, double defaultValue)
         {
             try
@@ -540,6 +570,7 @@ namespace SummitReports.Objects
                 var row = worksheet.GetRow(rowPosition) ?? worksheet.CreateRow(rowPosition);
                 int columnPosition = columnLetter.ToCharArray().Select(c => c - 'A' + 1).Reverse().Select((v, i) => v * (int)Math.Pow(26, i)).Sum() - 1;
                 var cell = row.GetCell(columnPosition, MissingCellPolicy.RETURN_NULL_AND_BLANK);
+                //if (cell.ErrorCellValue > 0) throw new Exception(string.Format("Cell has an error value of {0}", ((NPOI.XSSF.UserModel.XSSFCell)cell).ErrorCellString)); 
                 if (cell == null) return defaultValue;
                 return (decimal)cell.NumericCellValue;
             }

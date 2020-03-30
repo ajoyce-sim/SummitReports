@@ -49,7 +49,7 @@ namespace SummitReports.Objects
         public int InterestOnlyEnd { get; set; } = 0;
         public bool IsFixedPayment { get; set; } = false;
 
-        public AmortizationCalculator() : base(@"AmortizationCalculator\AmortizationCalculator_20200320.xlsx")
+        public AmortizationCalculator() : base(@"AmortizationCalculator\AmortizationCalculator_20200330.xlsx")
         {
         }
 
@@ -73,6 +73,7 @@ namespace SummitReports.Objects
                 {
                     throw new ArgumentException(string.Join(" ", Errors.ToArray()));
                 }
+                
                 sheet.SetCellValue(10, "F", this, "UPB");
                 sheet.SetCellValue(12, "F", this, "InterestRate");
                 if (double.TryParse(this.InterestCalculationMethodology.ToDescriptionString(), out var dblInterestCalculationMethodology))
@@ -88,11 +89,13 @@ namespace SummitReports.Objects
                 sheet.SetCellValue(25, "F", this, "InterestOnlyEnd");
                 sheet.SetCellValue(26, "F", (this.IsFixedPayment ? "Y" : "N"));
                 sheet.SetCellValue(27, "F", this, "FixedPaymentAmount");
-
+                
                 if (workbook is XSSFWorkbook)
                     XSSFFormulaEvaluator.EvaluateAllFormulaCells(workbook);
+                
                 else
                     HSSFFormulaEvaluator.EvaluateAllFormulaCells(workbook);
+
                 var result = new AmortizationScheduleResult();
 
                 var row = 35;
@@ -118,13 +121,21 @@ namespace SummitReports.Objects
                     if (endBalance == 0) break;
                 }
                 result.GeneratedFileName = this.GeneratedFileName;
-                SaveToFile( this.GeneratedFileName );
                 return result;
             }
             catch (Exception)
             {
-
                 throw;
+            }
+            finally
+            {
+                try
+                {
+                    SaveToFile(this.GeneratedFileName);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
     }

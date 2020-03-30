@@ -220,7 +220,8 @@ namespace SummitReports.Objects
                     }
                     else
                     {
-                        RegionUtil.SetTopBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
+                        throw new Exception("RegionUtil.SetTopBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook)");
+                        //RegionUtil.SetTopBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
                     }
                 }
                 if (this.Border.HasFlag(CellBorder.Bottom))
@@ -232,7 +233,8 @@ namespace SummitReports.Objects
                     }
                     else
                     {
-                        RegionUtil.SetBottomBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
+                        throw new Exception("RegionUtil.SetBottomBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook)");
+                        //RegionUtil.SetBottomBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
                     }
                 }
                 if (this.Border.HasFlag(CellBorder.Right))
@@ -244,7 +246,8 @@ namespace SummitReports.Objects
                     }
                     else
                     {
-                        RegionUtil.SetRightBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
+                        throw new Exception("RegionUtil.SetRightBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook)");
+                        //RegionUtil.SetRightBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
                     }
                 }
                 if (this.Border.HasFlag(CellBorder.Left))
@@ -256,7 +259,8 @@ namespace SummitReports.Objects
                     }
                     else
                     {
-                        RegionUtil.SetLeftBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
+                        throw new Exception("egionUtil.SetLeftBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook)");
+                        //RegionUtil.SetLeftBorderColor(this.BorderColor.Indexed, range, worksheet, worksheet.Workbook);
                     }
                 }
             }
