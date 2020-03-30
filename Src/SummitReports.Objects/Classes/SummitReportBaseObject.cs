@@ -131,8 +131,13 @@ namespace SummitReports.Objects
         public string TemplateFileName { get => templateFileName; set => templateFileName = value; }
         public TemplateExtentions templateExtentions = new TemplateExtentions(".docx", ".docx");
 
-        public virtual bool ReloadTemplate(string initial = "")
+        public virtual bool ReloadTemplate(string initial = "", string extention = "")
         {
+            if (extention.Length>0)
+            {
+                templateExtentions.FromExtention = extention;
+                templateExtentions.ToExtention = extention;
+            }
             this.GeneratedFileName = this.reportWorkPath + wordTemplateFileName.Replace(templateExtentions.FromExtention, "-" + Guid.NewGuid().ToString() + templateExtentions.ToExtention);
 
             var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;

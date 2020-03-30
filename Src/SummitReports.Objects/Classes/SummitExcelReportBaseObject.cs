@@ -18,7 +18,7 @@ namespace SummitReports.Objects
             excelTemplatePath = arr[0];
             excelTemplateFileName = arr[1];
         }
-        protected XSSFWorkbook workbook = new XSSFWorkbook();
+        protected IWorkbook workbook = new XSSFWorkbook();
         protected ISheet sheet;
 
         protected int rowIndex = 0;
@@ -64,9 +64,12 @@ namespace SummitReports.Objects
         /// </summary>
         /// <param name="initial">The First sheet to set sheet object to,it will use the name, but if start with an @ and a number, it will use that directly as the sheet index.  if this is empty it will assume the first sheet</param>
         /// <returns></returns>
-        public virtual bool ReloadTemplate(string initial = "")
+        public virtual bool ReloadTemplate(string initial = "", string extention = ".xlsx")
         {
-            this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(".xlsx", "-" + Guid.NewGuid().ToString() + ".xlsx");
+            if (extention.Equals(".xls")) workbook = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            if (extention.Equals(".xlsx")) workbook = new XSSFWorkbook();
+
+            this.GeneratedFileName = this.reportWorkPath + excelTemplateFileName.Replace(extention, "-" + Guid.NewGuid().ToString() + extention);
             var lst= System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames();
 
             var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;
@@ -86,7 +89,10 @@ namespace SummitReports.Objects
 
             using (FileStream file = new FileStream(this.GeneratedFileName, FileMode.Open, FileAccess.Read))
             {
-                this.workbook = new XSSFWorkbook(file);
+                //this.workbook = new XSSFWorkbook(file);
+                if (extention.Equals(".xls")) workbook = new NPOI.HSSF.UserModel.HSSFWorkbook(file);
+                if (extention.Equals(".xlsx")) workbook = new XSSFWorkbook(file);
+
                 if ((initial.StartsWith("@")) && (int.TryParse(initial.Replace("@", ""), out int initialIndex)))
                 {
                     this.iSheet = initialIndex;

@@ -18,6 +18,6 @@ namespace SummitReports.Infrastructure
         string GeneratedFileName { get; set; }
         void Clear();
         bool SaveToFile(string FileName);
-        bool ReloadTemplate(string initial = "");
+        bool ReloadTemplate(string initial = "", string extention = ".xlsx");
     }
 }
