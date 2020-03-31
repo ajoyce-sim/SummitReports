@@ -14,9 +14,9 @@
     <PackageTags>Summit Reports</PackageTags>
     <PackageReleaseNotes>This report libary can generated UW Relationship Cash Flow</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.73.0</AssemblyVersion>
-    <FileVersion>1.0.73.0</FileVersion>
-    <Version>1.0.73.0</Version>
+    <AssemblyVersion>1.0.74.0</AssemblyVersion>
+    <FileVersion>1.0.74.0</FileVersion>
+    <Version>1.0.74.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Reports\AmortizationCalculator\AmortizationCalculator_20200320.xlsx" />
