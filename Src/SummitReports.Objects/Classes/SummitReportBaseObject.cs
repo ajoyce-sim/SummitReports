@@ -46,8 +46,8 @@ namespace SummitReports.Objects
             FromExtention = fromExt;
             ToExtention = toExt;
         }
-        public string FromExtention { get; set; }
-        public string ToExtention { get; set; }
+        public string FromExtention { get; set; } = ".docx";
+        public string ToExtention { get; set; } = ".docx";
     }
     public class SummitPDFReportBaseObject : SummitReportBaseObject<HtmlDocument>, ISummitReport, ISummitReportInternal
     { 
@@ -90,7 +90,7 @@ namespace SummitReports.Objects
 
         protected string wordTemplateFileName = "";
         protected string wordTemplatePath = "";
-        protected string reportWorkPath;
+        protected string reportWorkPath = "";
 
         public string ReportWorkPath
         {
@@ -131,13 +131,8 @@ namespace SummitReports.Objects
         public string TemplateFileName { get => templateFileName; set => templateFileName = value; }
         public TemplateExtentions templateExtentions = new TemplateExtentions(".docx", ".docx");
 
-        public virtual bool ReloadTemplate(string initial = "", string extention = "")
+        public virtual bool ReloadTemplate(string initial = "")
         {
-            if (extention.Length>0)
-            {
-                templateExtentions.FromExtention = extention;
-                templateExtentions.ToExtention = extention;
-            }
             this.GeneratedFileName = this.reportWorkPath + wordTemplateFileName.Replace(templateExtentions.FromExtention, "-" + Guid.NewGuid().ToString() + templateExtentions.ToExtention);
 
             var assembly = typeof(SummitReports.Objects.SummitExcelReportBaseObject).GetTypeInfo().Assembly;

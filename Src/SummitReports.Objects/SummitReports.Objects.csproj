@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;</TargetFrameworks>
+	<LangVersion>8.0</LangVersion>
+	<Nullable>enable</Nullable>
     <PackageId>SummitReports</PackageId>
     <Authors>Noctusoft, Inc.</Authors>
     <Description>A library that allows easy processing of Summit Reports</Description>
@@ -12,15 +14,9 @@
     <PackageTags>Summit Reports</PackageTags>
     <PackageReleaseNotes>This report libary can generated UW Relationship Cash Flow</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.68.0</AssemblyVersion>
-    <FileVersion>1.0.68.0</FileVersion>
-    <Version>1.0.68.0</Version>
-    <AssemblyVersion>1.0.33.0</AssemblyVersion>
-    <FileVersion>1.0.33.0</FileVersion>
-    <Version>1.0.33.0</Version>
-    <AssemblyVersion>1.0.37.0</AssemblyVersion>
-    <FileVersion>1.0.37.0</FileVersion>
-    <Version>1.0.37.0</Version>
+    <AssemblyVersion>1.0.74.0</AssemblyVersion>
+    <FileVersion>1.0.74.0</FileVersion>
+    <Version>1.0.74.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Reports\AmortizationCalculator\AmortizationCalculator_20200320.xlsx" />
