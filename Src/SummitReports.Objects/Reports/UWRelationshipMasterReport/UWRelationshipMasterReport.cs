@@ -21,7 +21,6 @@ namespace SummitReports.Objects
         {
             XSSFWorkbook target = new XSSFWorkbook();
 
-            bool b = false;
             int xlsFileIdx = 0;
             foreach (string strFile in _sourceFiles.Keys)
             {

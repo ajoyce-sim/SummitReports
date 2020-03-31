@@ -156,7 +156,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1} for Field={2}.  {3}", rowPosition, columnLetter, FieldName, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1} for Field={2}.  {3}", rowPosition, columnLetter, FieldName, ex.Message), ex );
             }
         }
 
@@ -216,7 +216,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1} for Field={2}.  {3}", rowPosition, columnLetter, FieldName, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1} for Field={2}.  {3}", rowPosition, columnLetter, FieldName, ex.Message), ex );
             }
 
         }
@@ -263,7 +263,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
 
         }
@@ -283,7 +283,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
 
         }
@@ -300,7 +300,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error Setting Cell Type of row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error Setting Cell Type of row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
 
         }
@@ -319,7 +319,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error Setting Cell Type of row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error Setting Cell Type of row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
 
         }
@@ -339,7 +339,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
 
         }
@@ -357,7 +357,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
 
         }
@@ -376,7 +376,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing bool value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error writing bool value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
 
         }
@@ -394,7 +394,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing bool value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error writing bool value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
 
         }
@@ -411,7 +411,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
 
         }
@@ -430,7 +430,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
         }
 
@@ -447,7 +447,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
         }
 
@@ -465,7 +465,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
         }
 
@@ -483,7 +483,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error writing value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
         }
 
@@ -498,7 +498,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
         }
 
@@ -513,7 +513,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
         }
 
@@ -528,7 +528,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
         }
 
@@ -544,7 +544,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
         }
         public static double GetCellValue(this ISheet worksheet, int rowPosition, string columnLetter, double defaultValue)
@@ -559,7 +559,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex);
             }
         }
 
@@ -576,7 +576,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex);
             }
         }
 
@@ -591,7 +591,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
         }
 
@@ -608,7 +608,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
         }
 
@@ -623,7 +623,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnPosition, ex.Message), ex );
             }
         }
 
@@ -640,7 +640,7 @@ namespace SummitReports.Objects
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message));
+                throw new Exception(string.Format(@"Error getting value to row={0} col={1}.  {2}", rowPosition, columnLetter, ex.Message), ex );
             }
         }
     }

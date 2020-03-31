@@ -19,7 +19,7 @@ namespace SummitReports.Objects
             excelTemplateFileName = arr[1];
         }
         protected IWorkbook workbook = new XSSFWorkbook();
-        protected ISheet sheet;
+        protected ISheet sheet = new XSSFSheet();
 
         protected int rowIndex = 0;
         protected string templateFileName = "";
@@ -28,7 +28,7 @@ namespace SummitReports.Objects
         public string GeneratedFileName { get => generatedFileName; set => generatedFileName = value; }
         protected string excelTemplateFileName = "";
         protected string excelTemplatePath = "";
-        protected string reportWorkPath;
+        protected string reportWorkPath = "";
         protected int iSheet = 1;
 
         public string ReportWorkPath
@@ -64,8 +64,9 @@ namespace SummitReports.Objects
         /// </summary>
         /// <param name="initial">The First sheet to set sheet object to,it will use the name, but if start with an @ and a number, it will use that directly as the sheet index.  if this is empty it will assume the first sheet</param>
         /// <returns></returns>
-        public virtual bool ReloadTemplate(string initial = "", string extention = ".xlsx")
+        public virtual bool ReloadTemplate(string initial = "")
         {
+            var extention = ".xlsx";
             if (extention.Equals(".xls")) workbook = new NPOI.HSSF.UserModel.HSSFWorkbook();
             if (extention.Equals(".xlsx")) workbook = new XSSFWorkbook();
 

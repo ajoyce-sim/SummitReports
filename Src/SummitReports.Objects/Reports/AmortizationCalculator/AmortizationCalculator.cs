@@ -55,11 +55,12 @@ namespace SummitReports.Objects
 
         AmortizationScheduleResult IAmortizationCalculatorReport.Calculate()
         {
+            var CurrentTask = "Loading sheet";
             try
             {
                 if (!this.ReloadTemplate("Sheet1")) throw new Exception("Template could not be loaded :(");
-
                 List<string> Errors = new List<string>();
+                CurrentTask = "Validating Parms";
                 if (this.UPB <= 0) Errors.Add(string.Format("UPB value of {0} is invalid.", this.UPB));
                 if (this.StartDate.Equals(DateTime.MinValue)) Errors.Add(string.Format("StartDate value is not set."));
                 if (this.FixedPaymentAmount < 0) Errors.Add(string.Format("FixedPaymentAmount value of {0} is invalid.", this.FixedPaymentAmount));
@@ -73,7 +74,8 @@ namespace SummitReports.Objects
                 {
                     throw new ArgumentException(string.Join(" ", Errors.ToArray()));
                 }
-                
+
+                CurrentTask = "Setting Parms";
                 sheet.SetCellValue(10, "F", this, "UPB");
                 sheet.SetCellValue(12, "F", this, "InterestRate");
                 if (double.TryParse(this.InterestCalculationMethodology.ToDescriptionString(), out var dblInterestCalculationMethodology))
@@ -89,23 +91,34 @@ namespace SummitReports.Objects
                 sheet.SetCellValue(25, "F", this, "InterestOnlyEnd");
                 sheet.SetCellValue(26, "F", (this.IsFixedPayment ? "Y" : "N"));
                 sheet.SetCellValue(27, "F", this, "FixedPaymentAmount");
-                
+
+                CurrentTask = "Evaluating Formula";
                 if (workbook is XSSFWorkbook)
                     XSSFFormulaEvaluator.EvaluateAllFormulaCells(workbook);
-                
                 else
                     HSSFFormulaEvaluator.EvaluateAllFormulaCells(workbook);
 
                 var result = new AmortizationScheduleResult();
 
                 var row = 35;
+                CurrentTask = string.Format("Current Row is {0}", row);
                 for (int i = row; i < 500; i++)
                 {
+                    CurrentTask = string.Format("Row is {0}, reading {1}", row, "endBalance");
                     var endBalance = sheet.GetCellValue(i, "J", 0.0m);
+                    CurrentTask = string.Format("Row is {0}, reading {1}", row, "payment");
                     var payment = sheet.GetCellValue(i, "F", 0.0m);
-                    //if (payment>0)
-                    //{
-                        result.AmortizationScheduleItemList.Add(new AmortizationScheduleItem()
+                    CurrentTask = string.Format("Row is {0}, reading {1}", row, "into amort items....");
+                    CurrentTask = string.Format("Row is {0}, item {1} -  Month:{2}, ItemDate:{3}, BeginningBalance:{4}, Principal:{5}, Interest:{6}, Balloon:{7}", 
+                        row, "AmortizationScheduleItem"
+                        , sheet.GetCellValue(i, "C", 0)
+                        , sheet.GetCellValue(i, "D", DateTime.MinValue)
+                        , sheet.GetCellValue(i, "E", 0.0m)
+                        , sheet.GetCellValue(i, "G", 0.0m)
+                        , sheet.GetCellValue(i, "H", 0.0m)
+                        , sheet.GetCellValue(i, "I", 0.0m)
+                        );
+                    result.AmortizationScheduleItemList.Add(new AmortizationScheduleItem()
                         {
                             Month = sheet.GetCellValue(i, "C", 0),
                             ItemDate = sheet.GetCellValue(i, "D", DateTime.MinValue),
@@ -120,12 +133,14 @@ namespace SummitReports.Objects
                     //}
                     if (endBalance == 0) break;
                 }
+                CurrentTask = string.Format("Retuning through file {0}", result.GeneratedFileName);
+
                 result.GeneratedFileName = this.GeneratedFileName;
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(string.Format("Error while calculating Amortization Calculator.  {0}.  {1}", ex.Message, CurrentTask), ex);
             }
             finally
             {

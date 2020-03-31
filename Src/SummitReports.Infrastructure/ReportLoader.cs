@@ -18,7 +18,7 @@ namespace SummitReports.Infrastructure
             {
                 _ReportAssembly = Assembly.LoadFrom(assemblyPath);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -72,7 +72,7 @@ namespace SummitReports.Infrastructure
                     {
                         instance = new ReportLoader();
                     }
-                    catch (System.Exception ex)
+                    catch (System.Exception )
                     {
                         throw;
                     }

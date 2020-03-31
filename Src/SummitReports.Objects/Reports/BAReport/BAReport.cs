@@ -76,7 +76,7 @@ namespace SummitReports.Objects
 
                 // Get Dataset for report using ADO;  If uwRelationshipId <> 0 use uwRelationshipId else use BidPoolId
                 string sSQL2 = "";
-                DataSet retDataSet = null;
+                DataSet? retDataSet = null;
 
                 if (uwRelationshipId == 0)
                 {

@@ -45,7 +45,7 @@ namespace SummitReports.Objects
                 return new XSSFColor(System.Drawing.Color.Black);
             }
         }
-        public static XSSFColor WithIndex(this XSSFColor xSSFColor)
+        public static XSSFColor? WithIndex(this XSSFColor xSSFColor)
         {
             if (xSSFColor == null) return null;
             if (hexStringIndexColorCache.Count() == 0) CacheIndexColors();
@@ -59,13 +59,13 @@ namespace SummitReports.Objects
         /// </summary>
         /// <param name="colorToConvert"></param>
         /// <returns></returns>
-        public static XSSFColor AsXSSFColor(this IColor colorToConvert)
+        public static XSSFColor? AsXSSFColor(this IColor colorToConvert)
         {
             if (colorToConvert == null) return null;
             return ((XSSFColor)colorToConvert).WithIndex();
         }
 
-        public static XSSFColor AsXSSFColor(this IndexedColors indexedColor)
+        public static XSSFColor? AsXSSFColor(this IndexedColors indexedColor)
         {
             if (indexedColor == null) return null;
             return (new XSSFColor(indexedColor.RGB)).WithIndex();
