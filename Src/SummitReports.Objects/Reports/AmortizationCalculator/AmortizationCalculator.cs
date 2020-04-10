@@ -49,7 +49,7 @@ namespace SummitReports.Objects
         public int InterestOnlyEnd { get; set; } = 0;
         public bool IsFixedPayment { get; set; } = false;
 
-        public AmortizationCalculator() : base(@"AmortizationCalculator\AmortizationCalculator_20200330.xlsx")
+        public AmortizationCalculator() : base(@"AmortizationCalculator\AmortizationCalculator_20200410.xlsx")
         {
         }
 
