@@ -42,7 +42,7 @@
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.21" />
     <PackageReference Include="IronPdf" Version="2020.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NPOI" Version="2.4.1" />
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="19.2.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
